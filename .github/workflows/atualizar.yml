@@ -1,0 +1,25 @@
+name: Atualizar Status do Carrossel
+
+on:
+  repository_dispatch:
+    types: [atualizar_status]
+
+permissions:
+  contents: write
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v3
+
+      - name: Atualizar carrosseis.json
+        run: |
+          echo '${{ github.event.client.payload.dados }}' > carrosseis.json
+
+      - name: Commit e Push Automático
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Atualização de status via Painel Web"
+          branch: main
