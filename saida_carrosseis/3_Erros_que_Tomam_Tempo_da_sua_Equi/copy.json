@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "3 Erros que Tomam Tempo da sua Equipe",
+      "subtexto": "E como evitar o desperdício de horas no trabalho.",
+      "elementos": "Ilustração 3D minimalista de uma ampulheta ao lado de um relógio com design limpo em fundo azul escuro."
+    },
+    {
+      "numero": 2,
+      "tipo": "conteudo",
+      "headline": "1. Reuniões sem Pauta",
+      "subtexto": "Encontros sem objetivo claro geram conversas longas e nenhuma decisão.",
+      "elementos": "Ícone central 3D de um bloco de notas com uma caneta e um ponto de interrogação flutuando."
+    },
+    {
+      "numero": 3,
+      "tipo": "conteudo",
+      "headline": "2. Falta de Processos",
+      "subtexto": "Refazer tarefas por falta de um passo a passo bem definido.",
+      "elementos": "Ícone 3D de duas engrenagens conectadas com uma seta indicando fluxo contínuo."
+    },
+    {
+      "numero": 4,
+      "tipo": "conteudo",
+      "headline": "3. Comunicação Fragmentada",
+      "subtexto": "Informações espalhadas em vários canais causam perda de dados.",
+      "elementos": "Dois balões de conversa 3D se conectando de forma simples sobre um fundo neutro."
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "headline": "Otimize a sua Rotina",
+      "subtexto": "Corrija esses pontos e aumente a produtividade do seu time.",
+      "elementos": "Ilustração 3D de um sinal de visto (check verde) dentro de um círculo com brilho suave."
+    }
+  ]
+}
