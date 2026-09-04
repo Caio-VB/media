@@ -330,7 +330,7 @@ def executar():
         time.sleep(3)
 
     if len(slides) > 0 and sucessos == len(slides):
-        item_alvo["status"] = "concluido"
+        item_alvo["status"] = "aguardando"
         with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
             json.dump(carrosseis, f, ensure_ascii=False, indent=2)
         print(f"   [OK] Carrossel diário concluído com sucesso em: {slug}")
