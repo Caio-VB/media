@@ -1,4 +1,5 @@
 import base64
+import datetime
 import json
 import os
 import re
@@ -254,6 +255,14 @@ def enviar_pendencias_git(mensagem_commit="Sincronização de arquivos pendentes
 
 # ================= FLUXO PRINCIPAL (MODO DIÁRIO: 1 POR VEZ) =================
 def executar():
+    # Validação de dias permitidos: Segunda (0), Terça (1) e Sexta (4)
+    dia_atual = datetime.datetime.now().weekday()
+    dias_permitidos = [0, 1, 4]
+
+    if dia_atual not in dias_permitidos:
+        print("[i] Hoje não é dia de geração de carrossel (Apenas Segunda, Terça e Sexta). Encerrando rotina.")
+        return
+
     # 1. Sincroniza com o GitHub antes de começar (traz aprovações e JSON atualizado)
     try:
         print("[i] Sincronizando alterações do GitHub (git pull)...")
@@ -371,8 +380,5 @@ def executar():
     print("\n[SUCESSO] Execução diária finalizada!")
 
 
-# ================= TESTE DIRETO DO TELEGRAM =================
 if __name__ == "__main__":
-    print("[i] Testando envio de alerta para o Telegram...")
-    enviar_alerta_telegram("Teste de Notificação do Bot - Sistema Hiden")
-    print("[i] Teste finalizado. Verifique seu Telegram!")
+    executar()
