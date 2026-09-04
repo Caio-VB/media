@@ -33,12 +33,12 @@
 
     <script>
         // ================= CONFIGURAÇÕES DO SEU GITHUB =================
-        const GITHUB_USER = "Caio-VB";    // Ex: "caiovilor"
-        const GITHUB_REPO = "media"; // Ex: "media"
-        const BRANCH = "main";                      // 'main' ou 'master'
+        const GITHUB_USER = "Caio-VB";    
+        const GITHUB_REPO = "media"; 
+        const BRANCH = "main";                      
 
         let carrosseisData = [];
-        let shaArquivo = ""; // Necessário para atualizar arquivos via GitHub API
+        let shaArquivo = ""; 
 
         function configurarToken() {
             let tokenAtual = localStorage.getItem('github_token') || '';
@@ -59,10 +59,7 @@
                 });
                 let jsonResponse = await resposta.json();
                 
-                // Salva o SHA atual do arquivo (exigido pela API do GitHub para updates)
                 shaArquivo = jsonResponse.sha;
-                
-                // Decodifica o conteúdo base64 do JSON do GitHub
                 let decodedContent = decodeURIComponent(escape(atob(jsonResponse.content)));
                 carrosseisData = JSON.parse(decodedContent);
 
@@ -97,12 +94,18 @@
                     badgeClass = "bg-red-500/20 text-red-400 border-red-500/30";
                 }
 
+                // Renderiza dinamicamente assumindo até 10 slides possíveis. 
+                // A função onerror oculta automaticamente qualquer slide que não exista fisicamente na pasta.
                 let slidesHtml = "";
-                for (let i = 1; i <= 5; i++) {
+                for (let i = 1; i <= 10; i++) {
+                    let tipoSufixo = (i === 1) ? 'capa' : 'conteudo';
+                    // Se for o último slide padrão ou contiver cta, o script tenta carregar com cta também via onerror em cascata
+                    
                     slidesHtml += `
-                        <div class="flex-shrink-0 w-60 rounded-xl overflow-hidden border border-slate-700/60 bg-slate-900 shadow-lg relative group">
+                        <div class="flex-shrink-0 w-60 rounded-xl overflow-hidden border border-slate-700/60 bg-slate-900 shadow-lg relative group slide-container-${index}-${i}" style="display: none;">
                             <img src="saida_carrosseis/${slug}/slide_${i}_capa.png" 
-                                 onerror="this.onerror=null; this.src='saida_carrosseis/${slug}/slide_${i}_conteudo.png';" 
+                                 onerror="this.onerror=function(){this.onerror=function(){this.parentElement.style.display='none'}; this.src='saida_carrosseis/${slug}/slide_${i}_cta.png'}; this.src='saida_carrosseis/${slug}/slide_${i}_conteudo.png';" 
+                                 onload="this.parentElement.style.display='block'"
                                  class="w-full h-auto object-cover hover:scale-105 transition-transform duration-300 cursor-pointer min-h-[300px] bg-slate-950" 
                                  onclick="abrirModal(this.src)"
                                  alt="Slide ${i}">
@@ -160,7 +163,6 @@
             document.getElementById('status-sync').className = "text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30";
 
             try {
-                // Converte o JSON atualizado para Base64 corretamente com suporte a acentos (UTF-8)
                 let jsonString = JSON.stringify(carrosseisData, null, 2);
                 let contentBase64 = btoa(unescape(encodeURIComponent(jsonString)));
 
@@ -181,7 +183,7 @@
 
                 if (resposta.ok) {
                     let resultadoJson = await resposta.json();
-                    shaArquivo = resultadoJson.content.sha; // Atualiza o SHA para a próxima alteração
+                    shaArquivo = resultadoJson.content.sha; 
                     document.getElementById('status-sync').innerText = "Salvo com sucesso!";
                     document.getElementById('status-sync').className = "text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30";
                 } else {
