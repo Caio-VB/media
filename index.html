@@ -10,12 +10,11 @@
     <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></div>
-                <span class="text-slate-400 font-normal">Gerenciador de Carrosséis</span>
+                <span class="text-slate-400 font-normal">Carrosséis</span>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="configurarToken()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full border border-slate-700 transition">🔑 Configurar Token</button>
-                <div id="status-sync" class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">Carregando dados...</div>
+                <button onclick="configurarToken()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full border border-slate-700 transition">Token</button>
+                <div id="status-sync" class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">Carregando...</div>
             </div>
         </div>
     </header>
@@ -81,11 +80,11 @@
                 carrosseisData = JSON.parse(decodedContent);
 
                 renderizarCards();
-                document.getElementById('status-sync').innerText = "Sincronizado com GitHub";
+                document.getElementById('status-sync').innerText = "Sincronizado";
                 document.getElementById('status-sync').className = "text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30";
             } catch (err) {
                 console.error(err);
-                document.getElementById('status-sync').innerText = "Erro ao carregar dados da API";
+                document.getElementById('status-sync').innerText = "Erro";
                 document.getElementById('status-sync').className = "text-xs bg-rose-500/20 text-rose-400 px-3 py-1 rounded-full border border-rose-500/30";
             }
         }
@@ -104,10 +103,10 @@
             let container = document.getElementById('container-cards');
             container.innerHTML = "";
 
-            // Filtra removendo itens com status "pendente"
+            // Filtra removendo itens com status "pendente" ou "postado"
             let itensFiltrados = carrosseisData.filter(item => {
                 let status = (item.status || "pendente").toLowerCase();
-                return status !== "pendente";
+                return status !== "pendente" && status !== "postado";
             });
 
             // Ordena colocando "aguardando" (ou "concluido") sempre no topo
@@ -138,8 +137,6 @@
                     badgeClass = "bg-green-500/20 text-green-400 border-green-500/30";
                 } else if (status === "reprovado") {
                     badgeClass = "bg-red-500/20 text-red-400 border-red-500/30";
-                } else if (status === "postado") {
-                    badgeClass = "bg-blue-500/20 text-blue-400 border-blue-500/30";
                 }
 
                 let slidesHtml = "";
@@ -238,7 +235,6 @@
                     document.getElementById('status-sync').innerText = "Salvo com sucesso!";
                     document.getElementById('status-sync').className = "text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30";
                     
-                    // Re-renderiza para atualizar a ordenação instantaneamente na tela
                     renderizarCards();
                 } else {
                     let erroData = await resposta.json();
