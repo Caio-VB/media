@@ -10,6 +10,7 @@ from google import genai
 from google.genai import types
 from PIL import Image, ImageOps
 from dotenv import load_dotenv
+import requests
 
 # Carrega as variáveis de ambiente do arquivo .env seguro
 load_dotenv()
@@ -206,6 +207,29 @@ def salvar_e_recortar_1080x1350(imagem_pil, caminho_saida):
         f"      [OK] Slide salvo e ajustado (1080x1350px): {os.path.basename(caminho_saida)}"
     )
 
+# ================= FUNÇÃO AUXILIAR DE NOTIFICAÇÃO PELO TELEGRAM =================
+def enviar_alerta_telegram(titulo):
+  token = os.getenv("TELEGRAM_BOT_TOKEN")
+  chat_id = os.getenv("TELEGRAM_CHAT_ID")
+
+  if not token or not chat_id:
+    return
+
+  mensagem = (
+      f"*Carrossel Pronto para Aprovação!*\n\n"
+      f"📌 *Tema:* {titulo}\n\n"
+      f"Acesse para revisão: https://caio-vb.github.io/media/"
+  )
+
+  url = f"https://api.telegram.org/bot{token}/sendMessage"
+  try:
+    requests.post(
+        url, json={"chat_id": chat_id, "text": mensagem, "parse_mode": "Markdown"}
+    )
+  except Exception as e:
+    print(f"[!] Erro ao enviar notificação no Telegram: {e}")
+
+
 
 # ================= FUNÇÃO AUXILIAR DE SYNC COM O GITHUB =================
 def enviar_pendencias_git(mensagem_commit="Sincronização de arquivos pendentes"):
@@ -334,6 +358,7 @@ def executar():
         item_alvo["status"] = "aguardando"
         with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
             json.dump(carrosseis, f, ensure_ascii=False, indent=2)
+        enviar_alerta_telegram(titulo)
         print(f"   [OK] Carrossel diário concluído com sucesso em: {slug}")
     else:
         print(
@@ -346,5 +371,8 @@ def executar():
     print("\n[SUCESSO] Execução diária finalizada!")
 
 
+# ================= TESTE DIRETO DO TELEGRAM =================
 if __name__ == "__main__":
-    executar()
+    print("[i] Testando envio de alerta para o Telegram...")
+    enviar_alerta_telegram("Teste de Notificação do Bot - Sistema Hiden")
+    print("[i] Teste finalizado. Verifique seu Telegram!")
