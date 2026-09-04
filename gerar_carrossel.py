@@ -12,6 +12,7 @@ from google.genai import types
 from PIL import Image, ImageOps
 from dotenv import load_dotenv
 import requests
+import unicodedata
 
 # Carrega as variáveis de ambiente do arquivo .env seguro
 load_dotenv()
@@ -297,8 +298,24 @@ def executar():
         print("\n[SUCESSO] Execução finalizada!")
         return
 
-    titulo = item_alvo["titulo"]
-    slug = re.sub(r"[^\w\-_]", "_", titulo)[:35]
+    # 1. Normaliza e remove acentos/cedilhas
+    titulo_limpo = (
+        unicodedata.normalize("NFKD", item_alvo["titulo"])
+        .encode("ASCII", "ignore")
+        .decode("utf-8")
+    )
+
+    # 2. Substitui qualquer caractere fora do padrão por '_'
+    slug = re.sub(r"[^\w\-]", "_", titulo_limpo)
+
+    # 3. Remove underlines repetidos e trunca em 35 caracteres
+    slug = re.sub(r"_+", "_", slug).strip("_")[:35]
+
+    # 4. Salva o slug e atualiza o arquivo JSON imediatamente
+    item_alvo["slug"] = slug
+    with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
+        json.dump(carrosseis, f, ensure_ascii=False, indent=2)
+
     pasta_item = os.path.join(PASTA_SAIDA, slug)
 
     imagens_prontas = []
