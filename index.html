@@ -32,13 +32,13 @@
     </div>
 
     <script>
-        // ================= CONFIGURAÇÕES DO SEU GITHUB =================
         const GITHUB_USER = "Caio-VB";    
         const GITHUB_REPO = "media"; 
         const BRANCH = "main";                      
 
         let carrosseisData = [];
         let shaArquivo = ""; 
+        let pastasNoRepo = []; // Lista de pastas reais encontradas no GitHub
 
         function configurarToken() {
             let tokenAtual = localStorage.getItem('github_token') || '';
@@ -54,16 +54,21 @@
             try {
                 let token = localStorage.getItem('github_token') || '';
                 let headers = { 'Accept': 'application/vnd.github+json' };
-                
-                // Se houver token salvo, envia ele para evitar limite de requisições da API do GitHub
                 if (token) {
                     headers['Authorization'] = `Bearer ${token}`;
                 }
 
-                let resposta = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/carrosseis.json?ref=${BRANCH}&t=` + new Date().getTime(), {
-                    headers: headers
-                });
-                
+                // 1. Busca a lista de pastas dentro de 'saida_carrosseis' diretamente do GitHub para evitar erro de slug
+                let respPastas = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/saida_carrosseis?ref=${BRANCH}`, { headers });
+                if (respPastas.ok) {
+                    let jsonPastas = await respPastas.json();
+                    if (Array.isArray(jsonPastas)) {
+                        pastasNoRepo = jsonPastas.filter(item => item.type === "dir").map(item => item.name);
+                    }
+                }
+
+                // 2. Busca o arquivo carrosseis.json
+                let resposta = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/carrosseis.json?ref=${BRANCH}&t=` + new Date().getTime(), { headers });
                 let jsonResponse = await resposta.json();
                 
                 if (!jsonResponse.content) {
@@ -71,8 +76,6 @@
                 }
 
                 shaArquivo = jsonResponse.sha;
-                
-                // Remove quebras de linha do base64 retornado pelo GitHub para evitar falhas no atob
                 let base64Clean = jsonResponse.content.replace(/\n/g, '');
                 let decodedContent = decodeURIComponent(escape(atob(base64Clean)));
                 carrosseisData = JSON.parse(decodedContent);
@@ -87,11 +90,16 @@
             }
         }
 
-        function gerarSlug(titulo) {
-            return titulo
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                .replace(/[^\w\-_]/g, "_")
-                .substring(0, 35);
+        // Encontra automaticamente a pasta real correspondente ao título no repositório
+        function encontrarPastaReal(titulo) {
+            let slugParcial = titulo.replace(/[^\w\-_]/g, "_").substring(0, 15).toLowerCase();
+            let pastaEncontrada = pastasNoRepo.find(p => p.toLowerCase().includes(slugParcial));
+            
+            if (pastaEncontrada) {
+                return pastaEncontrada;
+            }
+            // Fallback caso não ache por parte do nome
+            return titulo.replace(/[^\w\-_]/g, "_").substring(0, 35);
         }
 
         function renderizarCards() {
@@ -106,7 +114,7 @@
             carrosseisData.forEach((item, index) => {
                 let titulo = item.titulo;
                 let status = item.status || "pendente";
-                let slug = gerarSlug(titulo);
+                let nomePasta = encontrarPastaReal(titulo);
 
                 let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
                 if (status === "aguardando" || status === "concluido") {
@@ -125,8 +133,8 @@
                     
                     slidesHtml += `
                         <div class="flex-shrink-0 w-60 rounded-xl overflow-hidden border border-slate-700/60 bg-slate-900 shadow-lg relative group" id="slide-box-${index}-${i}" style="display: none;">
-                            <img src="saida_carrosseis/${slug}/${nomePadrao}" 
-                                 onerror="tentarOutroFormato(this, '${slug}', ${i})" 
+                            <img src="saida_carrosseis/${nomePasta}/${nomePadrao}" 
+                                 onerror="tentarOutroFormato(this, '${nomePasta}', ${i})" 
                                  onload="document.getElementById('slide-box-${index}-${i}').style.display='block'"
                                  class="w-full h-auto object-cover hover:scale-105 transition-transform duration-300 cursor-pointer min-h-[300px] bg-slate-950" 
                                  onclick="abrirModal(this.src)"
@@ -163,11 +171,11 @@
             });
         }
 
-        function tentarOutroFormato(imgElement, slug, i) {
+        function tentarOutroFormato(imgElement, nomePasta, i) {
             if (imgElement.src.includes('_capa.png')) {
-                imgElement.src = `saida_carrosseis/${slug}/slide_${i}_conteudo.png`;
+                imgElement.src = `saida_carrosseis/${nomePasta}/slide_${i}_conteudo.png`;
             } else if (imgElement.src.includes('_conteudo.png')) {
-                imgElement.src = `saida_carrosseis/${slug}/slide_${i}_cta.png`;
+                imgElement.src = `saida_carrosseis/${nomePasta}/slide_${i}_cta.png`;
             } else {
                 imgElement.parentElement.style.display = 'none';
             }
