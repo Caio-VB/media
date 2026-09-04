@@ -87,25 +87,28 @@
                 let status = item.status || "pendente";
                 let slug = titulo.replace(/[^\w\-_]/g, "_").substring(0, 35);
 
-                let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-                if (status === "concluido" || status === "aprovado") {
+                // Definição das cores das tags de status
+                let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"; // Padrão pendente
+                if (status === "aguardando") {
+                    badgeClass = "bg-amber-500/20 text-amber-300 border-amber-500/30";
+                } else if (status === "concluido" || status === "aprovado") {
                     badgeClass = "bg-green-500/20 text-green-400 border-green-500/30";
                 } else if (status === "reprovado") {
                     badgeClass = "bg-red-500/20 text-red-400 border-red-500/30";
+                } else if (status === "postado") {
+                    badgeClass = "bg-blue-500/20 text-blue-400 border-blue-500/30";
                 }
 
-                // Renderiza dinamicamente assumindo até 10 slides possíveis. 
-                // A função onerror oculta automaticamente qualquer slide que não exista fisicamente na pasta.
+                // Renderiza dinamicamente os slides testando inteligentemente as nomenclaturas capa, conteudo e cta
                 let slidesHtml = "";
                 for (let i = 1; i <= 10; i++) {
-                    let tipoSufixo = (i === 1) ? 'capa' : 'conteudo';
-                    // Se for o último slide padrão ou contiver cta, o script tenta carregar com cta também via onerror em cascata
+                    let nomePadrao = (i === 1) ? 'slide_1_capa.png' : (i === 5 ? 'slide_5_cta.png' : `slide_${i}_conteudo.png`);
                     
                     slidesHtml += `
-                        <div class="flex-shrink-0 w-60 rounded-xl overflow-hidden border border-slate-700/60 bg-slate-900 shadow-lg relative group slide-container-${index}-${i}" style="display: none;">
-                            <img src="saida_carrosseis/${slug}/slide_${i}_capa.png" 
-                                 onerror="this.onerror=function(){this.onerror=function(){this.parentElement.style.display='none'}; this.src='saida_carrosseis/${slug}/slide_${i}_cta.png'}; this.src='saida_carrosseis/${slug}/slide_${i}_conteudo.png';" 
-                                 onload="this.parentElement.style.display='block'"
+                        <div class="flex-shrink-0 w-60 rounded-xl overflow-hidden border border-slate-700/60 bg-slate-900 shadow-lg relative group" id="slide-box-${index}-${i}" style="display: none;">
+                            <img src="saida_carrosseis/${slug}/${nomePadrao}" 
+                                 onerror="tentarOutroFormato(this, '${slug}', ${i})" 
+                                 onload="document.getElementById('slide-box-${index}-${i}').style.display='block'"
                                  class="w-full h-auto object-cover hover:scale-105 transition-transform duration-300 cursor-pointer min-h-[300px] bg-slate-950" 
                                  onclick="abrirModal(this.src)"
                                  alt="Slide ${i}">
@@ -139,6 +142,18 @@
                 `;
                 container.appendChild(card);
             });
+        }
+
+        // Função auxiliar para garantir que se uma extensão falhar, ele testa as outras variações antes de ocultar
+        function tentarOutroFormato(imgElement, slug, i) {
+            if (imgElement.src.includes('_capa.png')) {
+                imgElement.src = `saida_carrosseis/${slug}/slide_${i}_conteudo.png`;
+            } else if (imgElement.src.includes('_conteudo.png')) {
+                imgElement.src = `saida_carrosseis/${slug}/slide_${i}_cta.png`;
+            } else {
+                // Se testou capa, conteudo e cta e nenhum abriu, oculta o card do slide definitivamente
+                imgElement.parentElement.style.display = 'none';
+            }
         }
 
         async function enviarAcao(index, novoStatus) {
