@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "3 Automações Essenciais",
+      "subtexto": "Para economizar tempo e vender mais.",
+      "elementos": "Ícone de engrenagem flutuante, celular estilizado e fundo gradiente limpo."
+    },
+    {
+      "numero": 2,
+      "tipo": "conteudo",
+      "headline": "1. Respostas no Chat",
+      "subtexto": "Atenda clientes no WhatsApp e Instagram na hora.",
+      "elementos": "Balões de mensagem minimalistas com ícone de raio."
+    },
+    {
+      "numero": 3,
+      "tipo": "conteudo",
+      "headline": "2. E-mail de Boas-Vindas",
+      "subtexto": "Receba novos cadastros e envie ofertas automáticas.",
+      "elementos": "Envelope 3D limpo se abrindo com símbolo de check verde."
+    },
+    {
+      "numero": 4,
+      "tipo": "conteudo",
+      "headline": "3. Lembrete de Cobrança",
+      "subtexto": "Avise sobre vencimentos sem precisar cobrar manualmente.",
+      "elementos": "Calendário moderno com marcação e poucas moedas flutuantes."
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "headline": "Sua empresa já usa alguma?",
+      "subtexto": "Salve este post para implementar depois!",
+      "elementos": "Ícone de bandeira de salvar centralizado e limpo."
+    }
+  ]
+}
