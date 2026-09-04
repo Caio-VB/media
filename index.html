@@ -38,7 +38,7 @@
 
         let carrosseisData = [];
         let shaArquivo = ""; 
-        let pastasNoRepo = []; // Lista de pastas reais encontradas no GitHub
+        let pastasNoRepo = [];
 
         function configurarToken() {
             let tokenAtual = localStorage.getItem('github_token') || '';
@@ -58,7 +58,7 @@
                     headers['Authorization'] = `Bearer ${token}`;
                 }
 
-                // 1. Busca a lista de pastas dentro de 'saida_carrosseis' diretamente do GitHub para evitar erro de slug
+                // 1. Busca a lista real de pastas no GitHub
                 let respPastas = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/saida_carrosseis?ref=${BRANCH}`, { headers });
                 if (respPastas.ok) {
                     let jsonPastas = await respPastas.json();
@@ -67,7 +67,7 @@
                     }
                 }
 
-                // 2. Busca o arquivo carrosseis.json
+                // 2. Busca o carrosseis.json
                 let resposta = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/carrosseis.json?ref=${BRANCH}&t=` + new Date().getTime(), { headers });
                 let jsonResponse = await resposta.json();
                 
@@ -90,16 +90,15 @@
             }
         }
 
-        // Encontra automaticamente a pasta real correspondente ao título no repositório
-        function encontrarPastaReal(titulo) {
-            let slugParcial = titulo.replace(/[^\w\-_]/g, "_").substring(0, 15).toLowerCase();
-            let pastaEncontrada = pastasNoRepo.find(p => p.toLowerCase().includes(slugParcial));
-            
-            if (pastaEncontrada) {
-                return pastaEncontrada;
-            }
-            // Fallback caso não ache por parte do nome
-            return titulo.replace(/[^\w\-_]/g, "_").substring(0, 35);
+        // Encontra a pasta real no repositório ignorando acentos e caracteres especiais
+        function encontrarPastaReal(titulo, index) {
+            let tituloClean = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+            let encontrada = pastasNoRepo.find(pasta => {
+                let pastaClean = pasta.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+                return pastaClean.includes(tituloClean.substring(0, 8));
+            });
+            if (encontrada) return encontrada;
+            return pastasNoRepo[index] || titulo.replace(/[^\w\-_]/g, "_").substring(0, 35);
         }
 
         function renderizarCards() {
@@ -114,7 +113,7 @@
             carrosseisData.forEach((item, index) => {
                 let titulo = item.titulo;
                 let status = item.status || "pendente";
-                let nomePasta = encontrarPastaReal(titulo);
+                let nomePasta = encontrarPastaReal(titulo, index);
 
                 let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
                 if (status === "aguardando" || status === "concluido") {
@@ -127,13 +126,15 @@
                     badgeClass = "bg-blue-500/20 text-blue-400 border-blue-500/30";
                 }
 
+                // Limita o loop de slides de 1 até 5 (quantidade padrão gerada pelo script)
                 let slidesHtml = "";
-                for (let i = 1; i <= 10; i++) {
+                for (let i = 1; i <= 5; i++) {
                     let nomePadrao = (i === 1) ? 'slide_1_capa.png' : (i === 5 ? 'slide_5_cta.png' : `slide_${i}_conteudo.png`);
+                    let urlImagem = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/saida_carrosseis/${encodeURIComponent(nomePasta)}/${nomePadrao}`;
                     
                     slidesHtml += `
                         <div class="flex-shrink-0 w-60 rounded-xl overflow-hidden border border-slate-700/60 bg-slate-900 shadow-lg relative group" id="slide-box-${index}-${i}" style="display: none;">
-                            <img src="saida_carrosseis/${nomePasta}/${nomePadrao}" 
+                            <img src="${urlImagem}" 
                                  onerror="tentarOutroFormato(this, '${nomePasta}', ${i})" 
                                  onload="document.getElementById('slide-box-${index}-${i}').style.display='block'"
                                  class="w-full h-auto object-cover hover:scale-105 transition-transform duration-300 cursor-pointer min-h-[300px] bg-slate-950" 
@@ -172,10 +173,11 @@
         }
 
         function tentarOutroFormato(imgElement, nomePasta, i) {
-            if (imgElement.src.includes('_capa.png')) {
-                imgElement.src = `saida_carrosseis/${nomePasta}/slide_${i}_conteudo.png`;
-            } else if (imgElement.src.includes('_conteudo.png')) {
-                imgElement.src = `saida_carrosseis/${nomePasta}/slide_${i}_cta.png`;
+            let currentSrc = imgElement.src;
+            if (currentSrc.includes('_capa.png')) {
+                imgElement.src = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/saida_carrosseis/${encodeURIComponent(nomePasta)}/slide_${i}_conteudo.png`;
+            } else if (currentSrc.includes('_conteudo.png')) {
+                imgElement.src = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/saida_carrosseis/${encodeURIComponent(nomePasta)}/slide_${i}_cta.png`;
             } else {
                 imgElement.parentElement.style.display = 'none';
             }
