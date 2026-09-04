@@ -63,7 +63,7 @@ REGRAS CRÍTICAS:
 1. TAMANHO: Você tem total liberdade para decidir se o carrossel terá **3, 4 ou 5 slides**.
 2. CONTATOS: NUNCA inclua nenhum tipo de contato ou site.
 3. TEXTO: Use pouco texto e bem fáceis para evitar que a IA erre escrita na hora de gerar a imagem.
-4. ELEMENTOS: Descreva os elementos SEM EXAGERO PARA NÃO POLUIR que deverão compor a arte de cada slide, como pessoas, objetos, formas e etc.
+4. ELEMENTOS: Descreva os elementos SEM EXAGERO PARA NÃO POLUIR que deverão compor a arte de cada slide, como pessoas, objetos, formas e etc, NUNCA REPITA ELEMENTOS DE UM SLIDE PARA O OUTRO.
 
 Retorne EXCLUSIVAMENTE um JSON estruturado desta forma:
 {{
@@ -142,6 +142,7 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
         f"DIRETRIZES DE HIERARQUIA VISUAL (OBRIGATÓRIO):\n"
         f"- O TÍTULO PRINCIPAL DEVE SER GIGANTESCO, EM DESTAQUE ABSOLUTO E OCUPAR DO MEIO PARA CIMA COM LETRAS MAIÚSCULAS MUITO GRANDES E GROSSAS (HEAVY BOLD SANS-SERIF), SENDO O ELEMENTO MAIS IMPORTANTE DA IMAGEM.\n"
         f"- NUNCA DEIXE A IMAGEM POLUÍDA COM MUITOS ELEMENTOS.\n"
+        f"- NUNCA REPITA ELEMENTOS DE UM DOS SLIDES PARA O OUTRO.\n"
         f"- NUNCA inclua rótulos como 'capa', 'conteúdo', 'slide 1' ou números estruturais na imagem.\n"
         f"- PROIBIDO absoluto incluir links, sites, e-mails, telefones ou qualquer dado de contato.\n"
         f"- PROIBIDO colocar qualquer tipo de borda ou quadro na imagem.\n"
