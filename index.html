@@ -73,6 +73,14 @@
             }
         }
 
+        // Função para gerar o slug exatamente igual ao Python (removendo acentos e caracteres especiais)
+        function gerarSlug(titulo) {
+            return titulo
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove acentos
+                .replace(/[^\w\-_]/g, "_")                         // Substitui caracteres especiais por _
+                .substring(0, 35);                                 // Corta em 35 caracteres
+        }
+
         function renderizarCards() {
             let container = document.getElementById('container-cards');
             container.innerHTML = "";
@@ -85,13 +93,13 @@
             carrosseisData.forEach((item, index) => {
                 let titulo = item.titulo;
                 let status = item.status || "pendente";
-                let slug = titulo.replace(/[^\w\-_]/g, "_").substring(0, 35);
+                let slug = gerarSlug(titulo);
 
-                // Definição das cores das tags de status
+                // Definição das cores das tags de status (com suporte a aguardando e postado)
                 let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"; // Padrão pendente
-                if (status === "aguardando") {
+                if (status === "aguardando" || status === "concluido") {
                     badgeClass = "bg-amber-500/20 text-amber-300 border-amber-500/30";
-                } else if (status === "concluido" || status === "aprovado") {
+                } else if (status === "aprovado") {
                     badgeClass = "bg-green-500/20 text-green-400 border-green-500/30";
                 } else if (status === "reprovado") {
                     badgeClass = "bg-red-500/20 text-red-400 border-red-500/30";
@@ -151,7 +159,6 @@
             } else if (imgElement.src.includes('_conteudo.png')) {
                 imgElement.src = `saida_carrosseis/${slug}/slide_${i}_cta.png`;
             } else {
-                // Se testou capa, conteudo e cta e nenhum abriu, oculta o card do slide definitivamente
                 imgElement.parentElement.style.display = 'none';
             }
         }
