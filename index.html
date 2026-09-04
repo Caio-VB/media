@@ -90,7 +90,6 @@
             }
         }
 
-        // Encontra a pasta real no repositório ignorando acentos e caracteres especiais
         function encontrarPastaReal(titulo, index) {
             let tituloClean = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
             let encontrada = pastasNoRepo.find(pasta => {
@@ -105,14 +104,31 @@
             let container = document.getElementById('container-cards');
             container.innerHTML = "";
 
-            if (carrosseisData.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 text-center py-10">Nenhum carrossel encontrado.</p>`;
+            // Filtra removendo itens com status "pendente"
+            let itensFiltrados = carrosseisData.filter(item => {
+                let status = (item.status || "pendente").toLowerCase();
+                return status !== "pendente";
+            });
+
+            // Ordena colocando "aguardando" (ou "concluido") sempre no topo
+            itensFiltrados.sort((a, b) => {
+                let statusA = (a.status || "").toLowerCase();
+                let statusB = (b.status || "").toLowerCase();
+                
+                let isAguardandoA = (statusA === "aguardando" || statusA === "concluido") ? 0 : 1;
+                let isAguardandoB = (statusB === "aguardando" || statusB === "concluido") ? 0 : 1;
+                
+                return isAguardandoA - isAguardandoB;
+            });
+
+            if (itensFiltrados.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-center py-10">Nenhum carrossel para exibir no momento.</p>`;
                 return;
             }
 
-            carrosseisData.forEach((item, index) => {
+            itensFiltrados.forEach((item, index) => {
                 let titulo = item.titulo;
-                let status = item.status || "pendente";
+                let status = item.status || "aguardando";
                 let nomePasta = encontrarPastaReal(titulo, index);
 
                 let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
@@ -126,7 +142,6 @@
                     badgeClass = "bg-blue-500/20 text-blue-400 border-blue-500/30";
                 }
 
-                // Limita o loop de slides de 1 até 5 (quantidade padrão gerada pelo script)
                 let slidesHtml = "";
                 for (let i = 1; i <= 5; i++) {
                     let nomePadrao = (i === 1) ? 'slide_1_capa.png' : (i === 5 ? 'slide_5_cta.png' : `slide_${i}_conteudo.png`);
@@ -145,13 +160,15 @@
                     `;
                 }
 
+                let originalIndex = carrosseisData.findIndex(c => c.titulo === titulo);
+
                 let card = document.createElement('div');
                 card.className = "bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-2xl p-6 shadow-xl flex flex-col justify-between";
                 card.innerHTML = `
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-xs uppercase tracking-wider px-3 py-1 rounded-full border ${badgeClass}" id="badge-${index}">${status}</span>
-                            <span class="text-xs text-slate-400">Item #${index + 1}</span>
+                            <span class="text-xs uppercase tracking-wider px-3 py-1 rounded-full border ${badgeClass}" id="badge-${originalIndex}">${status}</span>
+                            <span class="text-xs text-slate-400">Item #${originalIndex + 1}</span>
                         </div>
                         <h2 class="text-xl font-bold text-white mb-6">${titulo}</h2>
                         <div class="flex gap-4 overflow-x-auto pb-4 mb-6 scrollbar-thin scrollbar-thumb-slate-600">
@@ -160,10 +177,10 @@
                     </div>
 
                     <div class="flex items-center gap-4 pt-4 border-t border-slate-700/80">
-                        <button onclick="enviarAcao(${index}, 'aprovado')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 px-4 rounded-xl transition shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2 cursor-pointer">
+                        <button onclick="enviarAcao(${originalIndex}, 'aprovado')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 px-4 rounded-xl transition shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2 cursor-pointer">
                             Aprovar
                         </button>
-                        <button onclick="enviarAcao(${index}, 'reprovado')" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-semibold py-2.5 px-4 rounded-xl transition shadow-lg shadow-rose-900/30 flex items-center justify-center gap-2 cursor-pointer">
+                        <button onclick="enviarAcao(${originalIndex}, 'reprovado')" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-semibold py-2.5 px-4 rounded-xl transition shadow-lg shadow-rose-900/30 flex items-center justify-center gap-2 cursor-pointer">
                             Reprovar
                         </button>
                     </div>
@@ -192,15 +209,7 @@
             }
 
             carrosseisData[index].status = novoStatus;
-            let badge = document.getElementById(`badge-${index}`);
-            badge.innerText = novoStatus;
             
-            if (novoStatus === 'aprovado') {
-                badge.className = "text-xs uppercase tracking-wider px-3 py-1 rounded-full border bg-green-500/20 text-green-400 border-green-500/30";
-            } else {
-                badge.className = "text-xs uppercase tracking-wider px-3 py-1 rounded-full border bg-red-500/20 text-red-400 border-red-500/30";
-            }
-
             document.getElementById('status-sync').innerText = "Salvando no GitHub...";
             document.getElementById('status-sync').className = "text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30";
 
@@ -228,6 +237,9 @@
                     shaArquivo = resultadoJson.content.sha; 
                     document.getElementById('status-sync').innerText = "Salvo com sucesso!";
                     document.getElementById('status-sync').className = "text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30";
+                    
+                    // Re-renderiza para atualizar a ordenação instantaneamente na tela
+                    renderizarCards();
                 } else {
                     let erroData = await resposta.json();
                     console.error(erroData);
