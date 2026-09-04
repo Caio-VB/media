@@ -52,15 +52,29 @@
 
         async function carregarDados() {
             try {
+                let token = localStorage.getItem('github_token') || '';
+                let headers = { 'Accept': 'application/vnd.github+json' };
+                
+                // Se houver token salvo, envia ele para evitar limite de requisições da API do GitHub
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
                 let resposta = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/carrosseis.json?ref=${BRANCH}&t=` + new Date().getTime(), {
-                    headers: {
-                        'Accept': 'application/vnd.github+json'
-                    }
+                    headers: headers
                 });
+                
                 let jsonResponse = await resposta.json();
                 
+                if (!jsonResponse.content) {
+                    throw new Error(jsonResponse.message || "Erro ao ler dados do repositório.");
+                }
+
                 shaArquivo = jsonResponse.sha;
-                let decodedContent = decodeURIComponent(escape(atob(jsonResponse.content)));
+                
+                // Remove quebras de linha do base64 retornado pelo GitHub para evitar falhas no atob
+                let base64Clean = jsonResponse.content.replace(/\n/g, '');
+                let decodedContent = decodeURIComponent(escape(atob(base64Clean)));
                 carrosseisData = JSON.parse(decodedContent);
 
                 renderizarCards();
@@ -73,12 +87,11 @@
             }
         }
 
-        // Função para gerar o slug exatamente igual ao Python (removendo acentos e caracteres especiais)
         function gerarSlug(titulo) {
             return titulo
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove acentos
-                .replace(/[^\w\-_]/g, "_")                         // Substitui caracteres especiais por _
-                .substring(0, 35);                                 // Corta em 35 caracteres
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\-_]/g, "_")
+                .substring(0, 35);
         }
 
         function renderizarCards() {
@@ -95,8 +108,7 @@
                 let status = item.status || "pendente";
                 let slug = gerarSlug(titulo);
 
-                // Definição das cores das tags de status (com suporte a aguardando e postado)
-                let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"; // Padrão pendente
+                let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
                 if (status === "aguardando" || status === "concluido") {
                     badgeClass = "bg-amber-500/20 text-amber-300 border-amber-500/30";
                 } else if (status === "aprovado") {
@@ -107,7 +119,6 @@
                     badgeClass = "bg-blue-500/20 text-blue-400 border-blue-500/30";
                 }
 
-                // Renderiza dinamicamente os slides testando inteligentemente as nomenclaturas capa, conteudo e cta
                 let slidesHtml = "";
                 for (let i = 1; i <= 10; i++) {
                     let nomePadrao = (i === 1) ? 'slide_1_capa.png' : (i === 5 ? 'slide_5_cta.png' : `slide_${i}_conteudo.png`);
@@ -152,7 +163,6 @@
             });
         }
 
-        // Função auxiliar para garantir que se uma extensão falhar, ele testa as outras variações antes de ocultar
         function tentarOutroFormato(imgElement, slug, i) {
             if (imgElement.src.includes('_capa.png')) {
                 imgElement.src = `saida_carrosseis/${slug}/slide_${i}_conteudo.png`;
