@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Aprovação de Carrosséis - Hiden</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></div>
+                <h1 class="text-lg font-bold tracking-tight text-white">HIDEN <span class="text-slate-400 font-normal">| Gerenciador de Carrosséis</span></h1>
+            </div>
+            <div id="status-sync" class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">Carregando dados...</div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+        <div id="container-cards" class="grid grid-cols-1 gap-8">
+            <!-- Os carrosséis serão injetados aqui via JS -->
+        </div>
+    </main>
+
+    <!-- Modal para zoom na imagem -->
+    <div id="modal" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-50 p-4" onclick="fecharModal()">
+        <img id="modal-img" class="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl border border-slate-700">
+    </div>
+
+    <script>
+        // ================= CONFIGURAÇÕES DO SEU GITHUB =================
+        const GITHUB_USER = "Caio-VB";    // Ex: "caiovilor"
+        const GITHUB_REPO = "media"; // Ex: "media"
+        const BRANCH = "main";       // 'main' ou 'master'
+
+        let carrosseisData = [];
+
+        async function carregarDados() {
+            try {
+                let resposta = await fetch('carrosseis.json?t=' + new Date().getTime());
+                carrosseisData = await resposta.json();
+                renderizarCards();
+                document.getElementById('status-sync').innerText = "Sincronizado com GitHub";
+                document.getElementById('status-sync').className = "text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30";
+            } catch (err) {
+                document.getElementById('status-sync').innerText = "Erro ao carregar carrosseis.json";
+                document.getElementById('status-sync').className = "text-xs bg-rose-500/20 text-rose-400 px-3 py-1 rounded-full border border-rose-500/30";
+            }
+        }
+
+        function renderizarCards() {
+            let container = document.getElementById('container-cards');
+            container.innerHTML = "";
+
+            if (carrosseisData.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-center py-10">Nenhum carrossel encontrado no arquivo JSON.</p>`;
+                return;
+            }
+
+            carrosseisData.forEach((item, index) => {
+                let titulo = item.titulo;
+                let status = item.status || "pendente";
+                // Limpa o slug igual ao Python faz para achar a pasta
+                let slug = titulo.replace(/[^\w\-_]/g, "_").substring(0, 35);
+
+                let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+                if (status === "concluido" || status === "aprovado") {
+                    badgeClass = "bg-green-500/20 text-green-400 border-green-500/30";
+                } else if (status === "reprovado") {
+                    badgeClass = "bg-red-500/20 text-red-400 border-red-500/30";
+                }
+
+                // Cria o container para os slides do carrossel (procurando na pasta saida_carrosseis/slug/)
+                // Como geramos slides de 1 a 5, exibimos as imagens correspondentes se existirem
+                let slidesHtml = "";
+                for (let i = 1; i <= 5; i++) {
+                    // Nota: se o slide exato (capa ou conteudo) variar no sufixo, tentamos carregar os padrões mais comuns
+                    let imgCaminho = `saida_carrosseis/${slug}/slide_${i}_capa.png`;
+                    let imgCaminhoAlt = `saida_carrosseis/${slug}/slide_${i}_conteudo.png`;
+
+                    // Para simplificar e garantir visualização fluida no GitHub Pages:
+                    slidesHtml += `
+                        <div class="flex-shrink-0 w-60 rounded-xl overflow-hidden border border-slate-700/60 bg-slate-900 shadow-lg relative group">
+                            <img src="saida_carrosseis/${slug}/slide_${i}_capa.png" 
+                                 onerror="this.onerror=null; this.src='saida_carrosseis/${slug}/slide_${i}_conteudo.png';" 
+                                 onload="this.style.display='block'" 
+                                 class="w-full h-auto object-cover hover:scale-105 transition-transform duration-300 cursor-pointer min-h-[300px] bg-slate-950" 
+                                 onclick="abrirModal(this.src)"
+                                 alt="Slide ${i}">
+                            <span class="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur">Slide ${i}</span>
+                        </div>
+                    `;
+                }
+
+                let card = document.createElement('div');
+                card.className = "bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-2xl p-6 shadow-xl flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs uppercase tracking-wider px-3 py-1 rounded-full border ${badgeClass}" id="badge-${index}">${status}</span>
+                            <span class="text-xs text-slate-400">Item #${index + 1}</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-white mb-6">${titulo}</h2>
+                        
+                        <!-- Lista horizontal de slides -->
+                        <div class="flex gap-4 overflow-x-auto pb-4 mb-6 scrollbar-thin scrollbar-thumb-slate-600">
+                            ${slidesHtml}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 pt-4 border-t border-slate-700/80">
+                        <button onclick="enviarAcao(${index}, 'aprovado')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 px-4 rounded-xl transition shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2 cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Aprovar
+                        </button>
+                        <button onclick="enviarAcao(${index}, 'reprovado')" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-semibold py-2.5 px-4 rounded-xl transition shadow-lg shadow-rose-900/30 flex items-center justify-center gap-2 cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            Reprovar
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function enviarAcao(index, novoStatus) {
+            carrosseisData[index].status = novoStatus;
+            let badge = document.getElementById(`badge-${index}`);
+            badge.innerText = novoStatus;
+            
+            if (novoStatus === 'aprovado') {
+                badge.className = "text-xs uppercase tracking-wider px-3 py-1 rounded-full border bg-green-500/20 text-green-400 border-green-500/30";
+            } else {
+                badge.className = "text-xs uppercase tracking-wider px-3 py-1 rounded-full border bg-red-500/20 text-red-400 border-red-500/30";
+            }
+
+            document.getElementById('status-sync').innerText = "Salvando no GitHub...";
+            document.getElementById('status-sync').className = "text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30";
+
+            try {
+                let resposta = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/dispatches`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        event_type: 'atualizar_status',
+                        client_payload: { dados: JSON.stringify(carrosseisData) }
+                    })
+                });
+                
+                document.getElementById('status-sync').innerText = "Salvo com sucesso!";
+                document.getElementById('status-sync').className = "text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30";
+            } catch(e) {
+                console.error(e);
+                document.getElementById('status-sync').innerText = "Erro ao sincronizar";
+                document.getElementById('status-sync').className = "text-xs bg-rose-500/20 text-rose-400 px-3 py-1 rounded-full border border-rose-500/30";
+            }
+        }
+
+        function abrirModal(src) {
+            let modal = document.getElementById('modal');
+            let modalImg = document.getElementById('modal-img');
+            modalImg.src = src;
+            modal.style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        carregarDados();
+    </script>
+</body>
+</html>
