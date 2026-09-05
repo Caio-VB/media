@@ -89,14 +89,28 @@
             }
         }
 
-        function encontrarPastaReal(titulo, index) {
-            let tituloClean = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
-            let encontrada = pastasNoRepo.find(pasta => {
-                let pastaClean = pasta.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
-                return pastaClean.includes(tituloClean.substring(0, 8));
-            });
+        function encontrarPastaReal(item) {
+            // 1. Se o JSON já tiver a propriedade slug, usa ela diretamente (é o nome exato da pasta)
+            if (item.slug && pastasNoRepo.includes(item.slug)) {
+                return item.slug;
+            }
+            if (item.slug) {
+                return item.slug;
+            }
+
+            // 2. Fallback caso não exista slug gravado: normaliza como o Python faz
+            let tituloClean = item.titulo
+                .normalize("NFKD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\-]/g, "_")
+                .replace(/_+/g, "_")
+                .replace(/^_+|_+$/g, "")
+                .substring(0, 35);
+
+            let encontrada = pastasNoRepo.find(p => p.toLowerCase() === tituloClean.toLowerCase());
             if (encontrada) return encontrada;
-            return pastasNoRepo[index] || titulo.replace(/[^\w\-_]/g, "_").substring(0, 35);
+
+            return tituloClean;
         }
 
         function renderizarCards() {
@@ -128,7 +142,7 @@
             itensFiltrados.forEach((item, index) => {
                 let titulo = item.titulo;
                 let status = item.status || "aguardando";
-                let nomePasta = encontrarPastaReal(titulo, index);
+                let nomePasta = encontrarPastaReal(item);
 
                 let badgeClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
                 if (status === "aguardando" || status === "concluido") {
