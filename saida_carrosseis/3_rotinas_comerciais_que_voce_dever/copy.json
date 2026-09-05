@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "Sua equipe perde 15h por semana em tarefas manuais?",
+      "subtexto": "3 rotinas comerciais para automatizar ainda esta semana e destravar suas vendas.",
+      "elementos": "Smartphone de alto padrão em primeiro plano sobre mesa de madeira, exibindo tela de notificações operacionais em escritório corporativo moderno."
+    },
+    {
+      "numero": 2,
+      "tipo": "gargalo",
+      "headline": "O custo invisível do processo manual",
+      "subtexto": "Responder mensagens repetitivas, agendar reuniões manualmente e emitir propostas do zero consome o tempo focado em fechar negócios.",
+      "elementos": "Executivo focado trabalhando em laptop ultraslim em sala de reunião envidraçada com luz natural."
+    },
+    {
+      "numero": 3,
+      "tipo": "solucao",
+      "headline": "Substitua a lentidão por fluxos automáticos",
+      "subtexto": "1. Resposta e triagem imediata de leads. 2. Agendamento direto na agenda. 3. Gerador instantâneo de orçamentos padronizados.",
+      "elementos": "Monitor widescreen exibindo dashboard limpo com métricas operacionais e fluxos de atendimento em ambiente tech."
+    },
+    {
+      "numero": 4,
+      "tipo": "resultado",
+      "headline": "Resposta em segundos, zero retrabalho",
+      "subtexto": "Redução drástica no tempo de atendimento, fim dos erros operacionais e mais tempo livre para os gestores estratégicos.",
+      "elementos": "Dois profissionais de tecnologia conversando em pé ao lado de um painel de dados corporativos."
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "headline": "Escale seu comercial sem inflar a equipe",
+      "subtexto": "Clique no link da bio para descobrir onde a sua rotina comercial pode ser automatizada.",
+      "elementos": "Close-up de mão segurando smartphone com aplicativo de gestão aberto, com fundo desfocado de ambiente de negócios."
+    }
+  ]
+}
