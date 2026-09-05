@@ -57,34 +57,44 @@ def gerar_roteiro_dinamico(client, titulo, lista_identidade):
     print("   [i] Solicitando roteiro rigoroso de 5 slides ao Gemini...")
 
     prompt = f"""
-Crie o roteiro completo de um carrossel sobre o tema: "{titulo}".
+        Atue como estrategista de conteúdo sênior e crie o roteiro completo de um carrossel de 5 slides sobre o tema: "{titulo}".
 
-REGRAS CRÍTICAS:
-1. TAMANHO E ESTRUTURA OBRIGATÓRIA: O carrossel terá EXATAMENTE 5 slides na seguinte ordem:
-   - Slide 1: tipo "capa"
-   - Slide 2: tipo "conteudo"
-   - Slide 3: tipo "conteudo"
-   - Slide 4: tipo "conteudo"
-   - Slide 5: tipo "cta"
-2. CONTATOS: NUNCA inclua nenhum tipo de contato ou site.
-3. TEXTO: Use pouco texto e bem fáceis para evitar erros na escrita ao gerar a imagem.
-4. ELEMENTOS: Descreva os elementos SEM EXAGERO PARA NÃO POLUIR a imagem de cada slide. NUNCA REPITA ELEMENTOS DE UM SLIDE PARA O OUTRO. USE ELEMENTOS COMERCIAIS COMO PESSOAS, ROBOS, E-MAILS, MENSAGENS, COMPUTADORES e etc. NÃO USE DESENHOS E ILUSTRAÇÔES, SÓ USE FOTOS REAIS.
+        CONTEXTO E POSICIONAMENTO DA MARCA:
+        - Especialidade principal: automação de redes sociais, mensagens/atendimento, agendamentos e orçamentos comerciais.
+        - Escopo secundário: desenvolvimento de soluções de software e fluxos sob medida para eliminar tarefas manuais.
 
-IMPORTANTE: O NOFFO MAIOT FOCO É EM AUTOMAÇÃO DE REDES SOCIAIS, MENSAGENS, AGENDAS E ORÇAMENTOS, MAS TAMBÉM FAZEMOS OUTRAS SOB MEDIDA.
+        DIRETRIZES OBRIGATÓRIAS DE CONTEÚDO:
+        1. ESTRUTURA RÍGIDA (EXATAMENTE 5 SLIDES):
+        - Slide 1: tipo "capa" (gancho forte, direto e chamativo)
+        - Slide 2: tipo "conteudo" (problema operacional ou gargalo)
+        - Slide 3: tipo "conteudo" (solução prática / processo automatizado)
+        - Slide 4: tipo "conteudo" (resultado obtido: tempo salvo, precisão ou escala)
+        - Slide 5: tipo "cta" (chamada final para ação reflexiva ou envio de mensagem)
 
-Retorne EXCLUSIVAMENTE um JSON estruturado desta forma com os **5 slides**:
-{{
-  "slides": [
-    {{
-      "numero": 1,
-      "tipo": "capa",
-      "headline": "Texto principal curto",
-      "subtexto": "Texto secundário curto",
-      "elementos": "elementos que compõem o slide"
-    }}
-  ]
-}}
-"""
+        2. TEXTO E REDAÇÃO (FOCO EM GERAÇÃO DE IMAGEM):
+        - Mantenha textos curtos, impactantes e objetivos.
+        - Use vocabulário simples e direto para facilitar a renderização tipográfica sem falhas.
+        - PROIBIDO incluir URLs, domínios, e-mails, telefones ou @ de redes sociais no texto.
+
+        3. DIREÇÃO DE ELEMENTOS VISUAIS:
+        - Descreva elementos visuais limpos e corporativos (máximo de 2 a 3 elementos por slide, evitando poluição).
+        - VARIAÇÃO OBRIGATÓRIA: Não repita os mesmos elementos entre os slides.
+        - ESTILO REALISTA: Especifique apenas elementos e contextos reais do ambiente de negócios (ex.: profissionais em escritórios modernos, telas de laptops exibindo gráficos, smartphones com notificações, robótica industrial/tecnológica). Proibido sugerir ilustrações, vetores, 3D cartunesco ou desenhos.
+
+        FORMATO DE SAÍDA:
+        Retorne EXCLUSIVAMENTE um objeto JSON válido, sem texto introdutório, sem Markdown extra e sem comentários. Siga estritamente este esquema:
+        {{
+        "slides": [
+            {{
+            "numero": 1,
+            "tipo": "capa",
+            "headline": "Texto principal em poucas palavras",
+            "subtexto": "Texto complementar curto",
+            "elementos": "Descrição sucinta dos elementos visuais realistas deste slide"
+            }}
+        ]
+        }}
+    """
 
     resp = client.models.generate_content(
         model="gemini-3.6-flash",
@@ -145,23 +155,27 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
     elementos = slide.get("elementos", "")
 
     prompt_iterativo = (
-        f"Crie um slide de carrossel vertical na proporção 4:5 para o Instagram, com um design limpo, moderno e profissional.\n\n"
-        f"DIRETRIZES DE HIERARQUIA VISUAL (OBRIGATÓRIO):\n"
-        f"- O TÍTULO PRINCIPAL DEVE SER GIGANTESCO, EM DESTAQUE ABSOLUTO E OCUPAR DO MEIO PARA CIMA COM LETRAS MAIÚSCULAS MUITO GRANDES E GROSSAS (HEAVY BOLD SANS-SERIF), SENDO O ELEMENTO MAIS IMPORTANTE DA IMAGEM.\n"
-        f"- SIGA RIGOROSAMENTE OS TEXTOS DA COPY QUE ESTOU TE ENVIANDO, SEM ALTERAR NEM ADICIONAR.\n"
-        f"- ELEMENTOS: SEM EXAGERO PARA NÃO POLUIR A IMAGEM. NÃO USE DESENHOS E ILUSTRAÇÔES DE PESSOAS, SÓ USE FOTOS REALISTAS DE PESSOAS.\n"
-        f"- HEADLINE DEVE SER SEMPRE MAIOR QUE O SUBTEXTO.\n"
-        f"- A DISTANCIA DOS ELEMENTOS EM RELAÇÃO A BORDA DEVE SER ADEQUADA.\n"
-        f"- SEMPRE QUEBRE A LINHA DOS TEXTOS NO LOCAL MAIS ADEQUADO, OU SEJA, NO LOCAL QUE DEIXARÁ A LINHA DE BAIXO E A DE CIMA COM UM TAMANHO MAIS PRÓXIMO.\n"
-        f"- A IMAGEM DEVE SER BEM PROFISSIONAL.\n"
-        f"- NUNCA DEIXE A IMAGEM POLUÍDA COM MUITOS ELEMENTOS.\n"
-        f"- NUNCA REPITA ELEMENTOS DE UM DOS SLIDES PARA O OUTRO.\n"
-        f"- NUNCA inclua rótulos como 'capa', 'conteúdo', 'slide 1' ou números estruturais na imagem.\n"
-        f"- PROIBIDO absoluto incluir links, sites, e-mails, telefones ou qualquer dado de contato.\n"
-        f"- PROIBIDO colocar qualquer tipo de borda ou quadro na imagem.\n"
-        f"- Mensagem central inspirada em: '{headline}' e '{subtexto}'.\n"
-        f"- Elementos visuais da arte: {elementos}. Dê preferência para elementos reais e não desenhos, como pessoas de verdade.\n"
-        f"- Mantenha total harmonia visual, paleta de cores corporativa, identidade da marca e o logotipo 'hiden' integrados de forma fluida com os slides anteriores anexados."
+        f"Crie um slide de carrossel vertical para Instagram (formato 4:5), ultra-profissional, corporativo e moderno.\n\n"
+        f"1. TEXTO E TIPOGRAFIA (RIGOR ABSOLUTO):\n"
+        f"- Headline obrigatória: \"{headline}\"\n"
+        f"- Subtexto obrigatório: \"{subtexto}\"\n"
+        f"- Siga EXATAMENTE os textos fornecidos acima, caractere por caractere. Não resuma, não parafraseie e não adicione palavras.\n"
+        f"- O TÍTULO PRINCIPAL (HEADLINE) DEVE SER GIGANTESCO, EM MAIÚSCULAS, FONTE HEAVY BOLD SANS-SERIF, ocupando do meio para cima como o ponto focal mais importante.\n"
+        f"- O subtexto deve ser visivelmente menor que a headline.\n"
+        f"- Quebre as linhas dos textos de forma harmônica (evite viúvas/órfãs; equilibre o comprimento visual das linhas).\n\n"
+        f"2. IDENTIDADE VISUAL E COMPOSIÇÃO:\n"
+        f"- Mantenha coerência estética total com as imagens de referência anexadas (paleta de cores, tipografia corporativa e acabamento).\n"
+        f"- LOGOTIPO 'hiden': preserve o formato e proporções originais do logotipo anexado. JAMAIS distorça, redimensione incorretamente ou altere seu design.\n"
+        f"- Respeite margens seguras: mantenha espaçamento adequado e consistente entre os elementos e as bordas externas do slide.\n"
+        f"- Layout clean: composição limpa, sem sobrecarga visual.\n\n"
+        f"3. ELEMENTOS VISUAIS E DIREÇÃO DE ARTE:\n"
+        f"- Elementos deste slide: {elementos}.\n"
+        f"- ESTILO ESTREITO: Utilize exclusivamente elementos fotográficos e realistas (ex.: fotos reais de pessoas em contexto de escritório/tecnologia). Proibido qualquer traço de ilustração vetorial, desenho, 3D cartunesco ou bonecos.\n"
+        f"- NÃO REPITA elementos visuais dos slides anteriores anexados; cada slide deve ter sua própria composição única.\n\n"
+        f"4. RESTRIÇÕES E PROIBIÇÕES CRÍTICAS (TOLERÂNCIA ZERO):\n"
+        f"- PROIBIDO adicionar molduras, bordas externas ou quadros na imagem.\n"
+        f"- PROIBIDO incluir números de página, etapas ou rótulos de estrutura (ex.: 'slide 1', 'capa', 'conteúdo', 'cta').\n"
+        f"- PROIBIDO incluir links, URLs, domínios de sites, arrobas de redes sociais, e-mails ou números de telefone."
     )
 
     conteudos = [prompt_iterativo]
