@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "Sua equipe perde 3 horas por dia enviando orçamentos manuais.",
+      "subtexto": "Descubra como transformar gargalos operacionais em orçamentos gerados em segundos.",
+      "elementos": "Foto em ângulo fechado de um smartphone moderno exibindo fluxo de mensagens, segurado por um executivo em ambiente corporativo desfocado ao fundo."
+    },
+    {
+      "numero": 2,
+      "tipo": "conteúdo",
+      "headline": "Copiar, colar e formatar dados custa caro.",
+      "subtexto": "Trabalho manual gera lentidão no atendimento, erros de digitação e perda de vendas para concorrentes mais ágeis.",
+      "elementos": "Foto realista de um profissional focado trabalhando em um notebook de tela fina em uma sala de reunião moderna."
+    },
+    {
+      "numero": 3,
+      "tipo": "conteúdo",
+      "headline": "Automação inteligente: do pedido ao envio.",
+      "subtexto": "A Hiden Software conecta seu atendimento comercial a um gerador automático de orçamentos padronizados e instantâneos.",
+      "elementos": "Foto de um monitor ultrawide mostrando um dashboard analítico de automação com gráficos de eficiência em tempo real."
+    },
+    {
+      "numero": 4,
+      "tipo": "conteúdo",
+      "headline": "+15 horas salvas por semana.",
+      "subtexto": "Respostas em menos de 1 minuto, zero retrabalho e sua equipe comercial focada 100% em fechar negócios.",
+      "elementos": "Foto de dois gestores conversando espontaneamente em um corredor amplo e iluminado de um escritório de tecnologia."
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "headline": "Elimine o trabalho manual da sua operação.",
+      "subtexto": "Clique no link da bio para descobrir onde a sua rotina pode ser automatizada.",
+      "elementos": "Foto elegante da recepção de uma empresa corporativa moderna com design minimalista e iluminação suave."
+    }
+  ]
+}

@@ -21,7 +21,8 @@
   },
   {
     "titulo": "Sua equipe perde 3 horas por dia enviando orçamentos manuais",
-    "status": "pendente"
+    "status": "aguardando",
+    "slug": "Sua_equipe_perde_3_horas_por_dia_en"
   },
   {
     "titulo": "Quanto dinheiro sua empresa perde demorando para responder mensagens?",
