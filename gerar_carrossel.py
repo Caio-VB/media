@@ -70,6 +70,8 @@ REGRAS CRÍTICAS:
 3. TEXTO: Use pouco texto e bem fáceis para evitar erros na escrita ao gerar a imagem.
 4. ELEMENTOS: Descreva os elementos SEM EXAGERO PARA NÃO POLUIR a imagem de cada slide. NUNCA REPITA ELEMENTOS DE UM SLIDE PARA O OUTRO. USE ELEMENTOS COMERCIAIS COMO PESSOAS, ROBOS, E-MAILS, MENSAGENS, COMPUTADORES e etc. NÃO USE DESENHOS E ILUSTRAÇÔES, SÓ USE FOTOS REAIS.
 
+IMPORTANTE: O NOFFO MAIOT FOCO É EM AUTOMAÇÃO DE REDES SOCIAIS, MENSAGENS, AGENDAS E ORÇAMENTOS, MAS TAMBÉM FAZEMOS OUTRAS SOB MEDIDA.
+
 Retorne EXCLUSIVAMENTE um JSON estruturado desta forma com os **5 slides**:
 {{
   "slides": [
@@ -146,16 +148,18 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
         f"Crie um slide de carrossel vertical na proporção 4:5 para o Instagram, com um design limpo, moderno e profissional.\n\n"
         f"DIRETRIZES DE HIERARQUIA VISUAL (OBRIGATÓRIO):\n"
         f"- O TÍTULO PRINCIPAL DEVE SER GIGANTESCO, EM DESTAQUE ABSOLUTO E OCUPAR DO MEIO PARA CIMA COM LETRAS MAIÚSCULAS MUITO GRANDES E GROSSAS (HEAVY BOLD SANS-SERIF), SENDO O ELEMENTO MAIS IMPORTANTE DA IMAGEM.\n"
+        f"- SIGA RIGOROSAMENTE OS TEXTOS DA COPY QUE ESTOU TE ENVIANDO, SEM ALTERAR NEM ADICIONAR.\n"
         f"- ELEMENTOS: SEM EXAGERO PARA NÃO POLUIR A IMAGEM. NÃO USE DESENHOS E ILUSTRAÇÔES DE PESSOAS, SÓ USE FOTOS REALISTAS DE PESSOAS.\n"
         f"- HEADLINE DEVE SER SEMPRE MAIOR QUE O SUBTEXTO.\n"
         f"- A DISTANCIA DOS ELEMENTOS EM RELAÇÃO A BORDA DEVE SER ADEQUADA.\n"
+        f"- SEMPRE QUEBRE A LINHA DOS TEXTOS NO LOCAL MAIS ADEQUADO, OU SEJA, NO LOCAL QUE DEIXARÁ A LINHA DE BAIXO E A DE CIMA COM UM TAMANHO MAIS PRÓXIMO.\n"
         f"- A IMAGEM DEVE SER BEM PROFISSIONAL.\n"
         f"- NUNCA DEIXE A IMAGEM POLUÍDA COM MUITOS ELEMENTOS.\n"
         f"- NUNCA REPITA ELEMENTOS DE UM DOS SLIDES PARA O OUTRO.\n"
         f"- NUNCA inclua rótulos como 'capa', 'conteúdo', 'slide 1' ou números estruturais na imagem.\n"
         f"- PROIBIDO absoluto incluir links, sites, e-mails, telefones ou qualquer dado de contato.\n"
         f"- PROIBIDO colocar qualquer tipo de borda ou quadro na imagem.\n"
-        f"- Mensagem central inspirada em: '{headline}' e '{subtexto}'. SINTETIZE essa mensagem de forma natural, sem soletração estrita para evitar erros tipográficos.\n"
+        f"- Mensagem central inspirada em: '{headline}' e '{subtexto}'.\n"
         f"- Elementos visuais da arte: {elementos}. Dê preferência para elementos reais e não desenhos, como pessoas de verdade.\n"
         f"- Mantenha total harmonia visual, paleta de cores corporativa, identidade da marca e o logotipo 'hiden' integrados de forma fluida com os slides anteriores anexados."
     )
