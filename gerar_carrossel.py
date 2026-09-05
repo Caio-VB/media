@@ -151,15 +151,15 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
 
     prompt_iterativo = (
         f"Crie o próximo slide sequencial de um carrossel contínuo vertical (proporção 4:5) para o Instagram, com acabamento premium e corporativo.\n\n"
-        f"1. TEXTO E TIPOGRAFIA:\n"
-        f'- Headline obrigatória: "{headline}"\n'
-        f'- Subtexto obrigatório: "{subtexto}"\n'
-        f"- Siga rigorosamente a copy fornecida acima, caractere por caractere. Não altere, não resuma e não crie textos extras.\n"
-        f"- HIERARQUIA VISUAL: Headline em letras maiúsculas, Heavy Bold Sans-Serif, dominante na tela.\n"
-        f"- O subtexto deve ser visivelmente menor e subordinado à headline.\n"
-        f"- Quebre as linhas de texto com equilíbrio estético.\n\n"
+        f"1. TEXTO, TIPOGRAFIA E SÍNTESE (FOCO EM ESCRITA CORRETA E LIMPA):\n"
+        f'- Conceito da Headline: "{headline}"\n'
+        f'- Conceito do Subtexto: "{subtexto}"\n'
+        f"- SÍNTESE VISUAL INTELIGENTE: Não tente renderizar frases longas literais. SINTETIZE a mensagem em poucas palavras-chave de alto impacto (máximo de 3 a 5 palavras na Headline) para garantir grafia perfeita, sem erros ortográficos, sem letras duplicadas e sem textos truncados.\n"
+        f"- Se o subtexto for longo ou desnecessário visualmente, resuma-o em uma linha muito curta ou foque apenas na Headline forte.\n"
+        f"- HIERARQUIA VISUAL: Headline em letras maiúsculas, Heavy Bold Sans-Serif, dominante e ultra-legível.\n"
+        f"- O subtexto deve ser curto, discreto e subordinado à headline.\n\n"
         f"2. ALINHAMENTO GEOMÉTRICO E CONTINUIDADE ENTRE SLIDES (REGRA RÍGIDA):\n"
-        f"- LINHA DE BASE DO TÍTULO: A primeira linha do título principal DEVE começar EXATAMENTE na mesma coordenada vertical Y (~20% do topo) dos slides anteriores anexados. Nunca desça ou suba a altura do texto de um slide para outro.\n"
+        f"- LINHA DE BASE DO TÍTULO: A primeira linha do texto principal DEVE começar EXATAMENTE na mesma coordenada vertical Y (~20% do topo) dos slides anteriores anexados.\n"
         f"- ALINHAMENTO E MARGEM: Mantenha o mesmo recuo lateral (margem esquerda segura de 10%) para os textos em todos os slides.\n"
         f"- POSIÇÃO E ESCALA DO LOGO: O logotipo 'hiden' deve permanecer idêntico em tamanho e posição exata (canto superior esquerdo, respeitando 8% de margem) em relação aos slides anteriores anexados.\n\n"
         f"3. CONTRASTE E CONTINUIDADE CROMÁTICA DO FUNDO:\n"
