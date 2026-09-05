@@ -26,7 +26,8 @@
   },
   {
     "titulo": "Quanto dinheiro sua empresa perde demorando para responder mensagens?",
-    "status": "pendente"
+    "status": "aguardando",
+    "slug": "Quanto_dinheiro_sua_empresa_perde_d"
   },
   {
     "titulo": "O que muda na sua operação quando seus posts rodam no piloto automático",

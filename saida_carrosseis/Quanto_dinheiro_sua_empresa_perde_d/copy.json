@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "Demorar para responder custa caro",
+      "subtexto": "Descubra quanto dinheiro sua empresa perde por minuto de atraso nas mensagens.",
+      "elementos": "Executivo focado olhando o smartphone em um escritório moderno com iluminação natural ao fundo."
+    },
+    {
+      "numero": 2,
+      "tipo": "conteúdo",
+      "headline": "O gargalo do atendimento manual",
+      "subtexto": "Leads esfriam em 5 minutos. Sua equipe perde tempo digitando respostas e orçamentos repetitivos.",
+      "elementos": "Mão em close digitando no teclado de um laptop em mesa de trabalho organizada."
+    },
+    {
+      "numero": 3,
+      "tipo": "conteúdo",
+      "headline": "A virada de chave: Automação B2B",
+      "subtexto": "Sistemas integrados que qualificam leads, geram orçamentos e agendam reuniões instantaneamente.",
+      "elementos": "Monitor ultrawide exibindo dashboard de métricas de atendimento e fluxo de mensagens em ambiente corporativo."
+    },
+    {
+      "numero": 4,
+      "tipo": "conteúdo",
+      "headline": "Resultados reais no seu caixa",
+      "subtexto": "Respostas 80% mais rápidas e dezenas de horas operacionais devolvidas aos gestores semanalmente.",
+      "elementos": "Dois profissionais analisando dados em um tablet durante reunião rápida e natural em sala de vidro."
+    },
+    {
+      "numero": 5,
+      "tipo": "CTA Comercial",
+      "headline": "Pare de perder vendas por demora",
+      "subtexto": "Clique no link da bio para descobrir onde a sua rotina pode ser automatizada.",
+      "elementos": "Smartphone sobre mesa de reunião espelhada mostrando interface limpa de aplicativo corporativo."
+    }
+  ]
+}
