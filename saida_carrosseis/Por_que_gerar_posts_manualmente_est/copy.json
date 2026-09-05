@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "Postar manualmente está custando caro demais.",
+      "subtexto": "Sua equipe perde horas operacionais que deveriam ir para estratégias de vendas.",
+      "elementos": "Foto realista de um gestor de marketing em um escritório moderno, olhando pensativo para a tela do notebook."
+    },
+    {
+      "numero": 2,
+      "tipo": "conteúdo",
+      "headline": "O gargalo oculto no seu marketing.",
+      "subtexto": "Criar, adaptar e agendar post por post consome até 15 horas semanais do seu time.",
+      "elementos": "Mão segurando smartphone corporativo exibindo um aplicativo de calendário de postagens lotado de tarefas."
+    },
+    {
+      "numero": 3,
+      "tipo": "conteúdo",
+      "headline": "A virada de chave: Automação de processos.",
+      "subtexto": "Substitua cliques manuais por fluxos automáticos de agendamento, atendimento e orçamentos.",
+      "elementos": "Laptop aberto em mesa de reunião de vidro, destacando um dashboard intuitivo de automação de redes."
+    },
+    {
+      "numero": 4,
+      "tipo": "conteúdo",
+      "headline": "O resultado concreto no final do mês.",
+      "subtexto": "Redução de 80% do retrabalho, respostas comerciais instantâneas e mais tempo para fechar negócios.",
+      "elementos": "Dois profissionais B2B em um ambiente corporativo moderno, analisando dados de crescimento na tela."
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "headline": "Elimine o trabalho braçal da sua equipe.",
+      "subtexto": "Acesse o link da bio para descobrir onde a sua rotina pode ser automatizada.",
+      "elementos": "Mesa de trabalho minimalista com smartphone recebendo notificações de processos concluídos."
+    }
+  ]
+}

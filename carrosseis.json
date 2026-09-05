@@ -16,50 +16,51 @@
   },
   {
     "titulo": "Por que gerar posts manualmente está matando o tempo do seu time",
+    "status": "aguardando",
+    "slug": "Por_que_gerar_posts_manualmente_est"
+  },
+  {
+    "titulo": "Sua equipe perde 3 horas por dia enviando orçamentos manuais",
     "status": "pendente"
   },
   {
-  "titulo": "Sua equipe perde 3 horas por dia enviando orçamentos manuais",
-  "status": "pendente"
+    "titulo": "Quanto dinheiro sua empresa perde demorando para responder mensagens?",
+    "status": "pendente"
   },
   {
-  "titulo": "Quanto dinheiro sua empresa perde demorando para responder mensagens?",
-  "status": "pendente"
+    "titulo": "O que muda na sua operação quando seus posts rodam no piloto automático",
+    "status": "pendente"
   },
   {
-  "titulo": "O que muda na sua operação quando seus posts rodam no piloto automático",
-  "status": "pendente"
+    "titulo": "3 rotinas comerciais que você deveria automatizar ainda esta semana",
+    "status": "pendente"
   },
   {
-  "titulo": "3 rotinas comerciais que você deveria automatizar ainda esta semana",
-  "status": "pendente"
+    "titulo": "Como fechar contratos mais rápido sem tocar na sua agenda",
+    "status": "pendente"
   },
   {
-  "titulo": "Como fechar contratos mais rápido sem tocar na sua agenda",
-  "status": "pendente"
+    "titulo": "O custo invisível de usar pessoas qualificadas para preencher cadastros",
+    "status": "pendente"
   },
   {
-  "titulo": "O custo invisível de usar pessoas qualificadas para preencher cadastros",
-  "status": "pendente"
+    "titulo": "3 gargalos no seu WhatsApp que estão fazendo clientes desistirem da compra",
+    "status": "pendente"
   },
   {
-  "titulo": "3 gargalos no seu WhatsApp que estão fazendo clientes desistirem da compra",
-  "status": "pendente"
+    "titulo": "Software sob medida vs ferramentas prontas: qual economiza mais tempo?",
+    "status": "pendente"
   },
   {
-  "titulo": "Software sob medida vs ferramentas prontas: qual economiza mais tempo?",
-  "status": "pendente"
+    "titulo": "Como gerar propostas personalizadas em 10 segundos no automático",
+    "status": "pendente"
   },
   {
-  "titulo": "Como gerar propostas personalizadas em 10 segundos no automático",
-  "status": "pendente"
+    "titulo": "3 sinais claros de que a operação da sua empresa atingiu o limite",
+    "status": "pendente"
   },
   {
-  "titulo": "3 sinais claros de que a operação da sua empresa atingiu o limite",
-  "status": "pendente"
-  },
-  {
-  "titulo": "O que acontece quando você troca tarefas operacionais por automação inteligente",
-  "status": "pendente"
+    "titulo": "O que acontece quando você troca tarefas operacionais por automação inteligente",
+    "status": "pendente"
   }
 ]
