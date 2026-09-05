@@ -5,14 +5,14 @@ import os
 import re
 import subprocess
 import time
+import unicodedata
 import warnings
 from io import BytesIO
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from PIL import Image, ImageOps
-from dotenv import load_dotenv
 import requests
-import unicodedata
 
 # Carrega as variáveis de ambiente do arquivo .env seguro
 load_dotenv()
@@ -54,16 +54,13 @@ def carregar_imagens_identidade():
 
 # ================= 1. GERAÇÃO DINÂMICA DE SLIDES =================
 def gerar_roteiro_dinamico(client, titulo, lista_identidade):
-    print(
-        "   [i] Solicitando roteiro flexível (entre 3 e 5 slides) ao Gemini..."
-    )
+    print("   [i] Solicitando roteiro de 5 slides ao Gemini...")
 
-    # Nota: Chaves duplas {{ }} usadas intencionalmente para escapar na f-string do Python
     prompt = f"""
 Crie o roteiro completo de um carrossel sobre o tema: "{titulo}".
 
 REGRAS CRÍTICAS:
-1. TAMANHO: Você tem total liberdade para decidir se o carrossel terá **3, 4 ou 5 slides**.
+1. TAMANHO: O carrossel terá EXATAMENTE **5 slides**.
 2. CONTATOS: NUNCA inclua nenhum tipo de contato ou site.
 3. TEXTO: Use pouco texto e bem fáceis para evitar que a IA erre escrita na hora de gerar a imagem.
 4. ELEMENTOS: Descreva os elementos SEM EXAGERO PARA NÃO POLUIR que deverão compor a arte de cada slide, como pessoas, objetos, formas e etc, NUNCA REPITA ELEMENTOS DE UM SLIDE PARA O OUTRO.
@@ -209,34 +206,33 @@ def salvar_e_recortar_1080x1350(imagem_pil, caminho_saida):
         f"      [OK] Slide salvo e ajustado (1080x1350px): {os.path.basename(caminho_saida)}"
     )
 
+
 # ================= FUNÇÃO AUXILIAR DE NOTIFICAÇÃO PELO TELEGRAM =================
 def enviar_alerta_telegram(titulo):
-  token = os.getenv("TELEGRAM_BOT_TOKEN")
-  chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
-  if not token or not chat_id:
-    return
+    if not token or not chat_id:
+        return
 
-  mensagem = (
-      f"*Carrossel Pronto para Aprovação!*\n\n"
-      f"📌 *Tema:* {titulo}\n\n"
-      f"Acesse para revisão: https://caio-vb.github.io/media/"
-  )
-
-  url = f"https://api.telegram.org/bot{token}/sendMessage"
-  try:
-    requests.post(
-        url, json={"chat_id": chat_id, "text": mensagem, "parse_mode": "Markdown"}
+    mensagem = (
+        f"*Carrossel Pronto para Aprovação!*\n\n"
+        f"📌 *Tema:* {titulo}\n\n"
+        f"Acesse para revisão: https://caio-vb.github.io/media/"
     )
-  except Exception as e:
-    print(f"[!] Erro ao enviar notificação no Telegram: {e}")
 
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    try:
+        requests.post(
+            url, json={"chat_id": chat_id, "text": mensagem, "parse_mode": "Markdown"}
+        )
+    except Exception as e:
+        print(f"[!] Erro ao enviar notificação no Telegram: {e}")
 
 
 # ================= FUNÇÃO AUXILIAR DE SYNC COM O GITHUB =================
 def enviar_pendencias_git(mensagem_commit="Sincronização de arquivos pendentes"):
     try:
-        # Verifica se há arquivos modificados ou novos não enviados
         status_res = subprocess.run(
             ["git", "status", "--porcelain"], capture_output=True, text=True, shell=True
         )
@@ -258,13 +254,13 @@ def enviar_pendencias_git(mensagem_commit="Sincronização de arquivos pendentes
 def executar():
     # Validação de dias permitidos: Segunda (0), Terça (1) e Sexta (4)
     dia_atual = datetime.datetime.now().weekday()
-    dias_permitidos = [0, 1, 4]
+    dias_permitidos = [0, 1, 5]
 
     if dia_atual not in dias_permitidos:
         print("[i] Hoje não é dia de geração de carrossel (Apenas Segunda, Terça e Sexta). Encerrando rotina.")
         return
 
-    # 1. Sincroniza com o GitHub antes de começar (traz aprovações e JSON atualizado)
+    # 1. Sincroniza com o GitHub antes de começar
     try:
         print("[i] Sincronizando alterações do GitHub (git pull)...")
         subprocess.run(["git", "pull"], check=True, shell=True)
@@ -293,25 +289,21 @@ def executar():
         print(
             "\n[i] Todos os carrosséis da fila já foram concluídos! Nenhum item pendente para hoje."
         )
-        # SEGURANÇA: Mesmo sem itens pendentes novos, se houver alguma pasta antiga gerada não enviada, envia agora!
         enviar_pendencias_git("Sincronizacao de pastas locais geradas anteriormente")
         print("\n[SUCESSO] Execução finalizada!")
         return
 
-    # 1. Normaliza e remove acentos/cedilhas
+    # 2. Define o título e gera o slug sanitizado
+    titulo = item_alvo["titulo"]
+
     titulo_limpo = (
-        unicodedata.normalize("NFKD", item_alvo["titulo"])
+        unicodedata.normalize("NFKD", titulo)
         .encode("ASCII", "ignore")
         .decode("utf-8")
     )
-
-    # 2. Substitui qualquer caractere fora do padrão por '_'
     slug = re.sub(r"[^\w\-]", "_", titulo_limpo)
-
-    # 3. Remove underlines repetidos e trunca em 35 caracteres
     slug = re.sub(r"_+", "_", slug).strip("_")[:35]
 
-    # 4. Salva o slug e atualiza o arquivo JSON imediatamente
     item_alvo["slug"] = slug
     with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
         json.dump(carrosseis, f, ensure_ascii=False, indent=2)
@@ -391,9 +383,7 @@ def executar():
             f"   [!] Geração incompleta ({sucessos}/{len(slides)}). O status permanecerá pendente para tentar novamente amanhã."
         )
 
-    # GARANTIA TOTAL DE ENVIO: Envia qualquer arquivo modificado ou pasta nova gerada (inclusive se houver sobras)
     enviar_pendencias_git(f"Gerado carrossel automato: {titulo}")
-
     print("\n[SUCESSO] Execução diária finalizada!")
 
 

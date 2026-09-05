@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "Automação vai além do WhatsApp",
+      "subtexto": "Descubra o verdadeiro poder da eficiência.",
+      "elementos": "Uma engrenagem 3D dourada flutuando sobre um fundo escuro e minimalista."
+    },
+    {
+      "numero": 2,
+      "tipo": "conteudo",
+      "headline": "Gestão Financeira",
+      "subtexto": "Emissão de notas e relatórios sem erro humano.",
+      "elementos": "Um gráfico de barras ascendente luminoso e moedas digitais reluzentes."
+    },
+    {
+      "numero": 3,
+      "tipo": "conteudo",
+      "headline": "Marketing e Vendas",
+      "subtexto": "Nutrição de clientes e e-mails programados.",
+      "elementos": "Um funil translúcido com ícones de cartas fluindo para o seu interior."
+    },
+    {
+      "numero": 4,
+      "tipo": "conteudo",
+      "headline": "Processos Internos",
+      "subtexto": "Integração entre planilhas e tarefas da equipe.",
+      "elementos": "Três pranchetas digitais lado a lado com marcadores de checklist brilhantes."
+    },
+    {
+      "numero": 5,
+      "tipo": "conclusao",
+      "headline": "Escale seu Negócio",
+      "subtexto": "Menos trabalho manual, mais resultados reais.",
+      "elementos": "Um foguete estilizado decolando e deixando um rastro suave de luz azul."
+    }
+  ]
+}
