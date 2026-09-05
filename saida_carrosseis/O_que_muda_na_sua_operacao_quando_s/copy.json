@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "Sua equipe ainda perde horas postando manualmente?",
+      "subtexto": "Veja o que muda na operação quando as redes rodam no piloto automático.",
+      "elementos": "Foto realista de smartphone em mesa de reunião moderna exibindo um fluxo de agendamento digital."
+    },
+    {
+      "numero": 2,
+      "tipo": "conteudo",
+      "headline": "O gargalo invisível da sua operação",
+      "subtexto": "Postar na hora, publicar manualmente e atender sem padrão consomem até 15 horas semanais do seu time.",
+      "elementos": "Foto realista de gestor focado analisando métricas de tempo em um laptop num ambiente corporativo."
+    },
+    {
+      "numero": 3,
+      "tipo": "conteudo",
+      "headline": "Postagens e mensagens no fluxo automático",
+      "subtexto": "A automação assume o agendamento de posts, respostas comerciais e envio de orçamentos sem falhas.",
+      "elementos": "Foto realista em close-up de um monitor de alta resolução exibindo dashboard de integrações e automações."
+    },
+    {
+      "numero": 4,
+      "tipo": "conteudo",
+      "headline": "+20 horas livres e atendimento instantâneo",
+      "subtexto": "Sua empresa elimina o retrabalho, acelera a conversão de leads e devolve tempo estratégico à equipe.",
+      "elementos": "Foto realista de equipe B2B alinhando estratégias em sala de reunião iluminada e moderna."
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "headline": "Pronto para acelerar sua operação?",
+      "subtexto": "Clique no link da bio para descobrir onde a sua rotina pode ser automatizada.",
+      "elementos": "Foto realista aproximada de mãos segurando um tablet corporativo em um escritório profissional."
+    }
+  ]
+}
