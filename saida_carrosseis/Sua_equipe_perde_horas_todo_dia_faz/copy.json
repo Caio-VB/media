@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "Sua equipe perde horas todo dia fazendo isso",
+      "subtexto": "E a culpa não é dela.",
+      "elementos": "Foto real de um funcionário estressado olhando para a tela de um computador de mesa no escritório."
+    },
+    {
+      "numero": 2,
+      "tipo": "conteudo",
+      "headline": "Respostas manuais e agendamentos",
+      "subtexto": "Copiar e colar mensagens e marcar horários consome tempo valioso de vendas.",
+      "elementos": "Foto real de uma mão segurando um smartphone moderno com aplicativo de mensagens aberto."
+    },
+    {
+      "numero": 3,
+      "tipo": "conteudo",
+      "headline": "Envio de orçamentos e redes sociais",
+      "subtexto": "Gerar propostas do zero e postar manualmente trava o crescimento do negócio.",
+      "elementos": "Foto real de um notebook aberto em uma mesa de madeira limpa com papéis de propostas comerciais."
+    },
+    {
+      "numero": 4,
+      "tipo": "conteudo",
+      "headline": "A automação resolve tudo",
+      "subtexto": "Sistemas inteligentes respondem, agendam e enviam orçamentos no piloto automático.",
+      "elementos": "Foto real de uma equipe corporativa sorrindo e comemorando resultados em uma sala de reunião."
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "headline": "Aumente a produtividade agora",
+      "subtexto": "Deixe a tecnologia trabalhar por você. Salve este post e comece a automatizar!",
+      "elementos": "Foto real de um empresário segurando um tablet moderno exibindo um painel de controle simples."
+    }
+  ]
+}
