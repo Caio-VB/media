@@ -54,18 +54,23 @@ def carregar_imagens_identidade():
 
 # ================= 1. GERAÇÃO DINÂMICA DE SLIDES =================
 def gerar_roteiro_dinamico(client, titulo, lista_identidade):
-    print("   [i] Solicitando roteiro de 5 slides ao Gemini...")
+    print("   [i] Solicitando roteiro rigoroso de 5 slides ao Gemini...")
 
     prompt = f"""
 Crie o roteiro completo de um carrossel sobre o tema: "{titulo}".
 
 REGRAS CRÍTICAS:
-1. TAMANHO: O carrossel terá EXATAMENTE **5 slides**.
+1. TAMANHO E ESTRUTURA OBRIGATÓRIA: O carrossel terá EXATAMENTE 5 slides na seguinte ordem:
+   - Slide 1: tipo "capa"
+   - Slide 2: tipo "conteudo"
+   - Slide 3: tipo "conteudo"
+   - Slide 4: tipo "conteudo"
+   - Slide 5: tipo "cta"
 2. CONTATOS: NUNCA inclua nenhum tipo de contato ou site.
-3. TEXTO: Use pouco texto e bem fáceis para evitar que a IA erre escrita na hora de gerar a imagem.
-4. ELEMENTOS: Descreva os elementos SEM EXAGERO PARA NÃO POLUIR que deverão compor a arte de cada slide, como pessoas, objetos, formas e etc, NUNCA REPITA ELEMENTOS DE UM SLIDE PARA O OUTRO.
+3. TEXTO: Use pouco texto e bem fáceis para evitar erros na escrita ao gerar a imagem.
+4. ELEMENTOS: Descreva os elementos SEM EXAGERO PARA NÃO POLUIR a imagem de cada slide. NUNCA REPITA ELEMENTOS DE UM SLIDE PARA O OUTRO. USE ELEMENTOS COMERCIAIS COMO PESSOAS, ROBOS, E-MAILS, MENSAGENS, COMPUTADORES e etc. NÃO USE DESENHOS E ILUSTRAÇÔES, SÓ USE FOTOS REAIS.
 
-Retorne EXCLUSIVAMENTE um JSON estruturado desta forma:
+Retorne EXCLUSIVAMENTE um JSON estruturado desta forma com os **5 slides**:
 {{
   "slides": [
     {{
@@ -73,7 +78,7 @@ Retorne EXCLUSIVAMENTE um JSON estruturado desta forma:
       "tipo": "capa",
       "headline": "Texto principal curto",
       "subtexto": "Texto secundário curto",
-      "elementos": "elementos que devem compor a arte de cada slide."
+      "elementos": "elementos que compõem o slide"
     }}
   ]
 }}
@@ -141,6 +146,10 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
         f"Crie um slide de carrossel vertical na proporção 4:5 para o Instagram, com um design limpo, moderno e profissional.\n\n"
         f"DIRETRIZES DE HIERARQUIA VISUAL (OBRIGATÓRIO):\n"
         f"- O TÍTULO PRINCIPAL DEVE SER GIGANTESCO, EM DESTAQUE ABSOLUTO E OCUPAR DO MEIO PARA CIMA COM LETRAS MAIÚSCULAS MUITO GRANDES E GROSSAS (HEAVY BOLD SANS-SERIF), SENDO O ELEMENTO MAIS IMPORTANTE DA IMAGEM.\n"
+        f"- ELEMENTOS: SEM EXAGERO PARA NÃO POLUIR A IMAGEM. NÃO USE DESENHOS E ILUSTRAÇÔES DE PESSOAS, SÓ USE FOTOS REALISTAS DE PESSOAS.\n"
+        f"- HEADLINE DEVE SER SEMPRE MAIOR QUE O SUBTEXTO.\n"
+        f"- A DISTANCIA DOS ELEMENTOS EM RELAÇÃO A BORDA DEVE SER ADEQUADA.\n"
+        f"- A IMAGEM DEVE SER BEM PROFISSIONAL.\n"
         f"- NUNCA DEIXE A IMAGEM POLUÍDA COM MUITOS ELEMENTOS.\n"
         f"- NUNCA REPITA ELEMENTOS DE UM DOS SLIDES PARA O OUTRO.\n"
         f"- NUNCA inclua rótulos como 'capa', 'conteúdo', 'slide 1' ou números estruturais na imagem.\n"
@@ -252,12 +261,12 @@ def enviar_pendencias_git(mensagem_commit="Sincronização de arquivos pendentes
 
 # ================= FLUXO PRINCIPAL (MODO DIÁRIO: 1 POR VEZ) =================
 def executar():
-    # Validação de dias permitidos: Segunda (0), Terça (1) e Sexta (4)
+    # Validação de dias permitidos: Terça (1), Quinta (3) e Domingo (6)
     dia_atual = datetime.datetime.now().weekday()
-    dias_permitidos = [0, 1, 5]
+    dias_permitidos = [1, 3, 6]
 
     if dia_atual not in dias_permitidos:
-        print("[i] Hoje não é dia de geração de carrossel (Apenas Segunda, Terça e Sexta). Encerrando rotina.")
+        print("[i] Hoje não é dia de geração de carrossel (Apenas Terça, Quinta e Domingo). Encerrando rotina.")
         return
 
     # 1. Sincroniza com o GitHub antes de começar
@@ -293,9 +302,8 @@ def executar():
         print("\n[SUCESSO] Execução finalizada!")
         return
 
-    # 2. Define o título e gera o slug sanitizado
+    # 2. Sanitiza o slug
     titulo = item_alvo["titulo"]
-
     titulo_limpo = (
         unicodedata.normalize("NFKD", titulo)
         .encode("ASCII", "ignore")
@@ -309,15 +317,6 @@ def executar():
         json.dump(carrosseis, f, ensure_ascii=False, indent=2)
 
     pasta_item = os.path.join(PASTA_SAIDA, slug)
-
-    imagens_prontas = []
-    if os.path.exists(pasta_item):
-        imagens_prontas = [
-            os.path.join(pasta_item, f)
-            for f in sorted(os.listdir(pasta_item))
-            if f.endswith(".png") and f.startswith("slide_")
-        ]
-
     caminho_copy = os.path.join(pasta_item, "copy.json")
     os.makedirs(pasta_item, exist_ok=True)
 
@@ -333,8 +332,25 @@ def executar():
         with open(caminho_copy, "w", encoding="utf-8") as f:
             json.dump(dados_copy, f, ensure_ascii=False, indent=2)
 
-    slides = dados_copy.get("slides", [])
-    print(f"[OK] Roteiro estruturado com {len(slides)} slides.")
+    slides = dados_copy.get("slides", [])[:5]
+    print(f"[OK] Roteiro validado para {len(slides)} slides.")
+
+    # Mapeamento estrito da nomenclatura oficial
+    nomes_arquivos_padrao = {
+        1: "slide_1_capa.png",
+        2: "slide_2_conteudo.png",
+        3: "slide_3_conteudo.png",
+        4: "slide_4_conteudo.png",
+        5: "slide_5_cta.png",
+    }
+
+    imagens_prontas = []
+    if os.path.exists(pasta_item):
+        imagens_prontas = [
+            os.path.join(pasta_item, f)
+            for f in sorted(os.listdir(pasta_item))
+            if f.endswith(".png") and f.startswith("slide_")
+        ]
 
     print("[2/2] Renderizando slides de forma cumulativa e sequencial...")
     sucessos = 0
@@ -346,17 +362,16 @@ def executar():
         except Exception:
             pass
 
-    for slide in slides:
-        num = slide["numero"]
-        tipo = slide.get("tipo", "conteudo")
-        caminho_img = os.path.join(pasta_item, f"slide_{num}_{tipo}.png")
+    for idx, slide in enumerate(slides, start=1):
+        nome_esperado = nomes_arquivos_padrao.get(idx, f"slide_{idx}_conteudo.png")
+        caminho_img = os.path.join(pasta_item, nome_esperado)
 
         if os.path.exists(caminho_img):
-            print(f"   -> Slide {num} já existe em disco. Pulando...")
+            print(f"   -> Slide {idx} já existe em disco ({nome_esperado}). Pulando...")
             sucessos += 1
             continue
 
-        print(f"   -> Gerando Slide {num} de {len(slides)} ({tipo})...")
+        print(f"   -> Gerando Slide {idx} de 5 ({nome_esperado})...")
         try:
             img_pil = gerar_slide_iterativo(
                 client, slide, historico_imagens_pil, lista_identidade
@@ -367,20 +382,20 @@ def executar():
             )
             sucessos += 1
         except Exception as e:
-            print(f"      [ERRO] Falha no Slide {num}: {e}")
+            print(f"      [ERRO] Falha no Slide {idx}: {e}")
             continue
 
         time.sleep(3)
 
-    if len(slides) > 0 and sucessos == len(slides):
+    if sucessos == 5:
         item_alvo["status"] = "aguardando"
         with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
             json.dump(carrosseis, f, ensure_ascii=False, indent=2)
         enviar_alerta_telegram(titulo)
-        print(f"   [OK] Carrossel diário concluído com sucesso em: {slug}")
+        print(f"   [OK] Carrossel concluído com exatamente 5 slides em: {slug}")
     else:
         print(
-            f"   [!] Geração incompleta ({sucessos}/{len(slides)}). O status permanecerá pendente para tentar novamente amanhã."
+            f"   [!] Geração incompleta ({sucessos}/5). O status permanecerá pendente para tentar novamente."
         )
 
     enviar_pendencias_git(f"Gerado carrossel automato: {titulo}")
