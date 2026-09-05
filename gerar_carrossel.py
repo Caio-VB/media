@@ -150,27 +150,30 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
     elementos = slide.get("elementos", "")
 
     prompt_iterativo = (
-        f"Crie um slide de carrossel vertical na proporção 4:5 para o Instagram, com acabamento premium, corporativo e minimalista.\n\n"
+        f"Crie o próximo slide sequencial de um carrossel contínuo vertical (proporção 4:5) para o Instagram, com acabamento premium e corporativo.\n\n"
         f"1. TEXTO E TIPOGRAFIA:\n"
-        f"- Headline obrigatória: \"{headline}\"\n"
-        f"- Subtexto obrigatório: \"{subtexto}\"\n"
-        f"- Siga rigorosamente a copy fornecida acima, caractere por caractere. Não altere, não adicione palavras nem invente textos extras.\n"
-        f"- HIERARQUIA VISUAL: A headline deve ser gigantesca, em destaque absoluto, posicionada do meio para cima com letras maiúsculas em Heavy Bold Sans-Serif.\n"
+        f'- Headline obrigatória: "{headline}"\n'
+        f'- Subtexto obrigatório: "{subtexto}"\n'
+        f"- Siga rigorosamente a copy fornecida acima, caractere por caractere. Não altere, não resuma e não crie textos extras.\n"
+        f"- HIERARQUIA VISUAL: Headline em letras maiúsculas, Heavy Bold Sans-Serif, dominante na tela.\n"
         f"- O subtexto deve ser visivelmente menor e subordinado à headline.\n"
-        f"- Quebre as linhas de texto de maneira visualmente equilibrada, sem deixar palavras isoladas.\n\n"
-        f"2. CONTRASTE, LEITURA E LOGO:\n"
-        f"- CONTRASTE OBRIGATÓRIO: Fundo limpo e escuro/corporativo que garanta legibilidade imediata das fontes claras. É PROIBIDO colocar fundos claros, brilhos excessivos ou detalhes fotográficos complexos diretamente atrás dos textos.\n"
-        f"- POSICIONAMENTO DO LOGO: Integre o logotipo 'hiden' de forma elegante e discreta no canto superior esquerdo ou centralizado na base, respeitando uma margem de respiro de pelo menos 10% da borda.\n"
-        f"- PRESERVAÇÃO DA MARCA: Mantenha a proporção, tipografia e formato exato do logo presente nos arquivos de referência anexados. Jamais deforme ou altere a identidade.\n\n"
-        f"3. ELEMENTOS VISUAIS E DIREÇÃO DE ARTE:\n"
+        f"- Quebre as linhas de texto com equilíbrio estético.\n\n"
+        f"2. ALINHAMENTO GEOMÉTRICO E CONTINUIDADE ENTRE SLIDES (REGRA RÍGIDA):\n"
+        f"- LINHA DE BASE DO TÍTULO: A primeira linha do título principal DEVE começar EXATAMENTE na mesma coordenada vertical Y (~20% do topo) dos slides anteriores anexados. Nunca desça ou suba a altura do texto de um slide para outro.\n"
+        f"- ALINHAMENTO E MARGEM: Mantenha o mesmo recuo lateral (margem esquerda segura de 10%) para os textos em todos os slides.\n"
+        f"- POSIÇÃO E ESCALA DO LOGO: O logotipo 'hiden' deve permanecer idêntico em tamanho e posição exata (canto superior esquerdo, respeitando 8% de margem) em relação aos slides anteriores anexados.\n\n"
+        f"3. CONTRASTE E CONTINUIDADE CROMÁTICA DO FUNDO:\n"
+        f"- O fundo DEVE reproduzir rigorosamente a mesma tonalidade, saturação, temperatura e iluminação dos slides anteriores anexados, garantindo a sensação de um único painel contínuo ao deslizar no feed.\n"
+        f"- Fundo escuro e limpo que proporcione legibilidade imediata das fontes claras. É PROIBIDO colocar fundos claros ou trocar a paleta de fundo no meio do carrossel.\n\n"
+        f"4. ELEMENTOS VISUAIS E DIREÇÃO DE ARTE:\n"
         f"- Elementos deste slide: {elementos}.\n"
-        f"- FOTOGRAFIA REALISTA: Use exclusivamente imagens fotográficas de alto padrão. Evite poses artificiais de banco de imagens gratuito: mostre pessoas reais trabalhando com postura corporativa natural, telas operacionais e ambientes modernos de negócios.\n"
-        f"- PROIBIDO qualquer tipo de vetor, desenho, ilustração ou visual 3D cartunesco.\n"
+        f"- FOTOGRAFIA REALISTA: Use exclusivamente fotos de alto padrão com pessoas em rotinas reais de trabalho ou dispositivos tecnológicos operacionais. Sem poses forçadas de banco de imagens gratuito.\n"
+        f"- PROIBIDO qualquer tipo de vetor, desenho, ilustração, ícones 3D cartunescos ou bordas/molduras.\n"
         f"- Não repita os mesmos elementos visuais presentes nos slides anteriores anexados.\n\n"
-        f"4. RESTRIÇÕES RÍGIDAS:\n"
-        f"- PROIBIDO incluir molduras, caixas de contorno ou bordas externas na imagem.\n"
-        f"- PROIBIDO adicionar números de slide, paginação ou rótulos (como 'capa', 'slide 1', 'cta').\n"
-        f"- PROIBIDO incluir URLs, domínios, sites, arrobas de redes sociais, telefones ou e-mails na arte."
+        f"5. RESTRIÇÕES RÍGIDAS:\n"
+        f"- PROIBIDO incluir molduras, contornos externos ou bordas na arte.\n"
+        f"- PROIBIDO adicionar paginação, números de slide ou rótulos ('capa', 'cta', 'slide 2').\n"
+        f"- PROIBIDO incluir URLs, arrobas, telefones ou e-mails."
     )
 
     conteudos = [prompt_iterativo]
@@ -253,24 +256,107 @@ def enviar_alerta_telegram(titulo):
 
 
 # ================= FUNÇÃO AUXILIAR DE SYNC COM O GITHUB =================
+def sincronizar_json_com_remoto(item_slug, novo_status):
+    """Garante que as aprovações feitas na web não sejam sobrescritas"""
+    try:
+        subprocess.run(["git", "fetch", "origin", "main"], check=True, shell=True)
+        # Tenta ler a versão mais recente do remoto
+        res = subprocess.run(
+            ["git", "show", "origin/main:carrosseis.json"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            shell=True,
+        )
+        if res.returncode == 0 and res.stdout:
+            dados_remotos = json.loads(res.stdout)
+            # Atualiza apenas o status do item atual na lista remota
+            for r in dados_remotos:
+                if r.get("slug") == item_slug or (
+                    item_slug
+                    and r.get("titulo", "")[:20] in item_slug.replace("_", " ")
+                ):
+                    r["status"] = novo_status
+                    if item_slug:
+                        r["slug"] = item_slug
+                    break
+
+            with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
+                json.dump(dados_remotos, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"[!] Aviso no merge inteligente do JSON: {e}")
+
+
 def enviar_pendencias_git(mensagem_commit="Sincronização de arquivos pendentes"):
     try:
         status_res = subprocess.run(
-            ["git", "status", "--porcelain"], capture_output=True, text=True, shell=True
+            ["git", "status", "--porcelain"],
+            capture_output=True,
+            text=True,
+            shell=True,
         )
+
         if status_res.stdout.strip():
-            print("[i] Detectados arquivos locais não enviados. Sincronizando com o GitHub...")
+            print(
+                "[i] Detectados arquivos locais para envio. Preparando commit..."
+            )
             subprocess.run(["git", "add", "."], check=True, shell=True)
             subprocess.run(
                 ["git", "commit", "-m", mensagem_commit],
                 check=True,
                 shell=True,
             )
-            subprocess.run(["git", "push"], check=True, shell=True)
-            print("[OK] Arquivos pendentes enviados para o GitHub com sucesso!")
-    except Exception as e:
-        print(f"[!] Aviso no envio automático ao Git: {e}")
 
+        # 1. Puxa as alterações remotas usando rebase para evitar commits vazios de merge
+        print("[i] Sincronizando alterações remotas (git pull --rebase)...")
+        pull_res = subprocess.run(
+            ["git", "pull", "--rebase", "origin", "main"],
+            capture_output=True,
+            text=True,
+            shell=True,
+        )
+
+        # 2. Se houver conflito no carrosseis.json, resolve priorizando o estado remoto + commit local
+        if pull_res.returncode != 0:
+            print("[!] Conflito detectado com o GitHub Pages. Resolvendo...")
+            subprocess.run(["git", "rebase", "--abort"], check=True, shell=True)
+
+            # Baixa a versão mais recente do remoto mantendo nossa pasta gerada
+            subprocess.run(
+                ["git", "fetch", "origin", "main"], check=True, shell=True
+            )
+            subprocess.run(
+                ["git", "checkout", "origin/main", "--", ARQUIVO_JSON],
+                check=True,
+                shell=True,
+            )
+
+            # Re-adiciona as imagens e commita
+            subprocess.run(["git", "add", "."], check=True, shell=True)
+            subprocess.run(
+                [
+                    "git",
+                    "commit",
+                    "-m",
+                    f"{mensagem_commit} (resolucao de conflito)",
+                ],
+                check=True,
+                shell=True,
+            )
+            subprocess.run(
+                ["git", "pull", "--rebase", "origin", "main"],
+                check=True,
+                shell=True,
+            )
+
+        # 3. Envia com segurança para a branch main
+        subprocess.run(
+            ["git", "push", "origin", "main"], check=True, shell=True
+        )
+        print("[OK] Sincronização e push concluídos com sucesso no GitHub!")
+
+    except Exception as e:
+        print(f"[!] Erro no envio automático ao Git: {e}")
 
 # ================= FLUXO PRINCIPAL (MODO DIÁRIO: 1 POR VEZ) =================
 def executar():
@@ -401,9 +487,8 @@ def executar():
         time.sleep(3)
 
     if sucessos == 5:
-        item_alvo["status"] = "aguardando"
-        with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
-            json.dump(carrosseis, f, ensure_ascii=False, indent=2)
+        # Puxa as aprovações que você clicou no painel durante o tempo de geração
+        sincronizar_json_com_remoto(slug, "aguardando")
         enviar_alerta_telegram(titulo)
         print(f"   [OK] Carrossel concluído com exatamente 5 slides em: {slug}")
     else:
