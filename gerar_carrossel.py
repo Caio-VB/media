@@ -151,13 +151,16 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
 
     prompt_iterativo = (
         f"Crie o próximo slide sequencial de um carrossel contínuo vertical (proporção 4:5) para o Instagram, com acabamento premium e corporativo.\n\n"
-        f"1. TEXTO, TIPOGRAFIA E SÍNTESE (FOCO EM ESCRITA CORRETA E LIMPA):\n"
+       f"1. TEXTO, TIPOGRAFIA E SÍNTESE (RIGOR CONTRA DUPLICAÇÃO E ERROS):\n"
         f'- Conceito da Headline: "{headline}"\n'
         f'- Conceito do Subtexto: "{subtexto}"\n'
-        f"- SÍNTESE VISUAL INTELIGENTE: Não tente renderizar frases longas literais. SINTETIZE a mensagem em poucas palavras-chave de alto impacto (máximo de 3 a 5 palavras na Headline) para garantir grafia perfeita, sem erros ortográficos, sem letras duplicadas e sem textos truncados.\n"
-        f"- Se o subtexto for longo ou desnecessário visualmente, resuma-o em uma linha muito curta ou foque apenas na Headline forte.\n"
-        f"- HIERARQUIA VISUAL: Headline em letras maiúsculas, Heavy Bold Sans-Serif, dominante e ultra-legível.\n"
+        f"- SÍNTESE VISUAL INTELIGENTE: Sintetize a mensagem em poucas palavras-chave de alto impacto (máximo de 3 a 5 palavras na Headline).\n"
+        f"- TOLERÂNCIA ZERO PARA PALAVRAS REPETIDAS: Cada palavra deve aparecer EXATAMENTE UMA ÚNICA VEZ. É estritamente proibido gaguejar ou duplicar palavras consecutivas (ex.: proibido escrever 'caro caro', 'tempo tempo', 'sua sua').\n"
+        f"- NÃO REPITA TERMOS PARA PREENCHER ESPAÇO: Em vez de duplicar termos para preencher a largura da tela, aumente o tamanho da fonte (tracking/kerning e peso Heavy Bold) para ocupar o espaço de forma limpa.\n"
+        f"- Se o subtexto for longo ou desnecessário visualmente, resuma-o em uma linha muito curta ou use apenas a Headline.\n"
+        f"- HIERARQUIA VISUAL: Headline em letras maiúsculas, Heavy Bold Sans-Serif, dominante e com ortografia impecável.\n"
         f"- O subtexto deve ser curto, discreto e subordinado à headline.\n\n"
+        f"- Nunca repita palavras (duplicadas em sequencia) ou frases (que já foram usadas no carrossel).\n\n"
         f"2. ALINHAMENTO GEOMÉTRICO E CONTINUIDADE ENTRE SLIDES (REGRA RÍGIDA):\n"
         f"- LINHA DE BASE DO TÍTULO: A primeira linha do texto principal DEVE começar EXATAMENTE na mesma coordenada vertical Y (~20% do topo) dos slides anteriores anexados.\n"
         f"- ALINHAMENTO E MARGEM: Mantenha o mesmo recuo lateral (margem esquerda segura de 10%) para os textos em todos os slides.\n"
