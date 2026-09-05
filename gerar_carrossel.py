@@ -167,6 +167,7 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
         f"- Fundo escuro e limpo que proporcione legibilidade imediata das fontes claras. É PROIBIDO colocar fundos claros ou trocar a paleta de fundo no meio do carrossel.\n\n"
         f"4. ELEMENTOS VISUAIS E DIREÇÃO DE ARTE:\n"
         f"- Elementos deste slide: {elementos}.\n"
+        f"- Você tem um pouco de liberdade com os elementos visuais, mas eles devem refletir plenamente o que estamos solucionando para o cliente.\n"
         f"- FOTOGRAFIA REALISTA: Use exclusivamente fotos de alto padrão com pessoas em rotinas reais de trabalho ou dispositivos tecnológicos operacionais. Sem poses forçadas de banco de imagens gratuito.\n"
         f"- PROIBIDO qualquer tipo de vetor, desenho, ilustração, ícones 3D cartunescos ou bordas/molduras.\n"
         f"- Não repita os mesmos elementos visuais presentes nos slides anteriores anexados.\n\n"
