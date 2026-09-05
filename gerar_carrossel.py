@@ -57,40 +57,35 @@ def gerar_roteiro_dinamico(client, titulo, lista_identidade):
     print("   [i] Solicitando roteiro rigoroso de 5 slides ao Gemini...")
 
     prompt = f"""
-        Atue como estrategista de conteúdo sênior e crie o roteiro completo de um carrossel de 5 slides sobre o tema: "{titulo}".
+        Atue como estrategista sênior de marketing B2B e crie o roteiro completo de um carrossel de exatamente 5 slides sobre o tema: "{titulo}".
 
-        CONTEXTO E POSICIONAMENTO DA MARCA:
-        - Especialidade principal: automação de redes sociais, mensagens/atendimento, agendamentos e orçamentos comerciais.
-        - Escopo secundário: desenvolvimento de soluções de software e fluxos sob medida para eliminar tarefas manuais.
+        POSICIONAMENTO DA HIDEN SOFTWARE:
+        - Especialidades centrais: automação de redes sociais, mensagens/atendimento comercial, agendamentos automáticos e geradores de orçamentos.
+        - Escopo secundário: desenvolvimento de scripts e integrações sob medida para eliminar tarefas manuais e devolver tempo para equipes e gestores.
 
-        DIRETRIZES OBRIGATÓRIAS DE CONTEÚDO:
-        1. ESTRUTURA RÍGIDA (EXATAMENTE 5 SLIDES):
-        - Slide 1: tipo "capa" (gancho forte, direto e chamativo)
-        - Slide 2: tipo "conteudo" (problema operacional ou gargalo)
-        - Slide 3: tipo "conteudo" (solução prática / processo automatizado)
-        - Slide 4: tipo "conteudo" (resultado obtido: tempo salvo, precisão ou escala)
-        - Slide 5: tipo "cta" (chamada final para ação reflexiva ou envio de mensagem)
+        ESTRUTURA RÍGIDA DE CONVERSÃO (5 SLIDES):
+        - Slide 1 (Capa): Gancho forte com dor ou promessa objetiva sobre tempo/custo.
+        - Slide 2 (Conteúdo): O gargalo real (onde a empresa gasta dinheiro e tempo desnecessário).
+        - Slide 3 (Conteúdo): A virada de chave (como a automação resolve o fluxo).
+        - Slide 4 (Conteúdo): O resultado concreto (métricas como horas salvas, velocidade de resposta ou fim do retrabalho).
+        - Slide 5 (CTA Comercial): Chamada direta para ação B2B direcionada ao link da bio (ex.: "Clique no link da bio para descobrir onde a sua rotina pode ser automatizada").
 
-        2. TEXTO E REDAÇÃO (FOCO EM GERAÇÃO DE IMAGEM):
-        - Mantenha textos curtos, impactantes e objetivos.
-        - Use vocabulário simples e direto para facilitar a renderização tipográfica sem falhas.
-        - PROIBIDO incluir URLs, domínios, e-mails, telefones ou @ de redes sociais no texto.
+        DIRETRIZES DE TEXTO E IMAGEM:
+        - TEXTO CURTO E OBJETIVO: Use frases enxutas de alto impacto para garantir leitura rápida no feed e renderização limpa.
+        - PROIBIÇÃO DE CONTATOS: Proibido colocar links, sites, e-mails, telefones ou arrobas.
+        - ELEMENTOS VISUAIS: Descreva no máximo 2 a 3 elementos visuais por slide. Exija sempre fotos e cenas reais do ambiente corporativo/tecnológico (escritórios modernos, smartphones operando fluxos, dashboards em laptops, pessoas reais focadas).
+        - VARIAÇÃO: Não repita os mesmos elementos visuais entre os slides.
+        - ESTILO: Proibido sugerir desenhos, vetores, ilustrações 3D ou poses artificiais de banco de imagens.
 
-        3. DIREÇÃO DE ELEMENTOS VISUAIS:
-        - Descreva elementos visuais limpos e corporativos (máximo de 2 a 3 elementos por slide, evitando poluição).
-        - VARIAÇÃO OBRIGATÓRIA: Não repita os mesmos elementos entre os slides.
-        - ESTILO REALISTA: Especifique apenas elementos e contextos reais do ambiente de negócios (ex.: profissionais em escritórios modernos, telas de laptops exibindo gráficos, smartphones com notificações, robótica industrial/tecnológica). Proibido sugerir ilustrações, vetores, 3D cartunesco ou desenhos.
-
-        FORMATO DE SAÍDA:
-        Retorne EXCLUSIVAMENTE um objeto JSON válido, sem texto introdutório, sem Markdown extra e sem comentários. Siga estritamente este esquema:
+        Retorne EXCLUSIVAMENTE um JSON estruturado exatamente assim:
         {{
         "slides": [
             {{
             "numero": 1,
             "tipo": "capa",
-            "headline": "Texto principal em poucas palavras",
-            "subtexto": "Texto complementar curto",
-            "elementos": "Descrição sucinta dos elementos visuais realistas deste slide"
+            "headline": "Headline curta em poucas palavras",
+            "subtexto": "Subtexto complementar curto",
+            "elementos": "Descrição objetiva de elementos fotográficos realistas"
             }}
         ]
         }}
@@ -155,27 +150,27 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
     elementos = slide.get("elementos", "")
 
     prompt_iterativo = (
-        f"Crie um slide de carrossel vertical para Instagram (formato 4:5), ultra-profissional, corporativo e moderno.\n\n"
-        f"1. TEXTO E TIPOGRAFIA (RIGOR ABSOLUTO):\n"
+        f"Crie um slide de carrossel vertical na proporção 4:5 para o Instagram, com acabamento premium, corporativo e minimalista.\n\n"
+        f"1. TEXTO E TIPOGRAFIA:\n"
         f"- Headline obrigatória: \"{headline}\"\n"
         f"- Subtexto obrigatório: \"{subtexto}\"\n"
-        f"- Siga EXATAMENTE os textos fornecidos acima, caractere por caractere. Não resuma, não parafraseie e não adicione palavras.\n"
-        f"- O TÍTULO PRINCIPAL (HEADLINE) DEVE SER GIGANTESCO, EM MAIÚSCULAS, FONTE HEAVY BOLD SANS-SERIF, ocupando do meio para cima como o ponto focal mais importante.\n"
-        f"- O subtexto deve ser visivelmente menor que a headline.\n"
-        f"- Quebre as linhas dos textos de forma harmônica (evite viúvas/órfãs; equilibre o comprimento visual das linhas).\n\n"
-        f"2. IDENTIDADE VISUAL E COMPOSIÇÃO:\n"
-        f"- Mantenha coerência estética total com as imagens de referência anexadas (paleta de cores, tipografia corporativa e acabamento).\n"
-        f"- LOGOTIPO 'hiden': preserve o formato e proporções originais do logotipo anexado. JAMAIS distorça, redimensione incorretamente ou altere seu design.\n"
-        f"- Respeite margens seguras: mantenha espaçamento adequado e consistente entre os elementos e as bordas externas do slide.\n"
-        f"- Layout clean: composição limpa, sem sobrecarga visual.\n\n"
+        f"- Siga rigorosamente a copy fornecida acima, caractere por caractere. Não altere, não adicione palavras nem invente textos extras.\n"
+        f"- HIERARQUIA VISUAL: A headline deve ser gigantesca, em destaque absoluto, posicionada do meio para cima com letras maiúsculas em Heavy Bold Sans-Serif.\n"
+        f"- O subtexto deve ser visivelmente menor e subordinado à headline.\n"
+        f"- Quebre as linhas de texto de maneira visualmente equilibrada, sem deixar palavras isoladas.\n\n"
+        f"2. CONTRASTE, LEITURA E LOGO:\n"
+        f"- CONTRASTE OBRIGATÓRIO: Fundo limpo e escuro/corporativo que garanta legibilidade imediata das fontes claras. É PROIBIDO colocar fundos claros, brilhos excessivos ou detalhes fotográficos complexos diretamente atrás dos textos.\n"
+        f"- POSICIONAMENTO DO LOGO: Integre o logotipo 'hiden' de forma elegante e discreta no canto superior esquerdo ou centralizado na base, respeitando uma margem de respiro de pelo menos 10% da borda.\n"
+        f"- PRESERVAÇÃO DA MARCA: Mantenha a proporção, tipografia e formato exato do logo presente nos arquivos de referência anexados. Jamais deforme ou altere a identidade.\n\n"
         f"3. ELEMENTOS VISUAIS E DIREÇÃO DE ARTE:\n"
         f"- Elementos deste slide: {elementos}.\n"
-        f"- ESTILO ESTREITO: Utilize exclusivamente elementos fotográficos e realistas (ex.: fotos reais de pessoas em contexto de escritório/tecnologia). Proibido qualquer traço de ilustração vetorial, desenho, 3D cartunesco ou bonecos.\n"
-        f"- NÃO REPITA elementos visuais dos slides anteriores anexados; cada slide deve ter sua própria composição única.\n\n"
-        f"4. RESTRIÇÕES E PROIBIÇÕES CRÍTICAS (TOLERÂNCIA ZERO):\n"
-        f"- PROIBIDO adicionar molduras, bordas externas ou quadros na imagem.\n"
-        f"- PROIBIDO incluir números de página, etapas ou rótulos de estrutura (ex.: 'slide 1', 'capa', 'conteúdo', 'cta').\n"
-        f"- PROIBIDO incluir links, URLs, domínios de sites, arrobas de redes sociais, e-mails ou números de telefone."
+        f"- FOTOGRAFIA REALISTA: Use exclusivamente imagens fotográficas de alto padrão. Evite poses artificiais de banco de imagens gratuito: mostre pessoas reais trabalhando com postura corporativa natural, telas operacionais e ambientes modernos de negócios.\n"
+        f"- PROIBIDO qualquer tipo de vetor, desenho, ilustração ou visual 3D cartunesco.\n"
+        f"- Não repita os mesmos elementos visuais presentes nos slides anteriores anexados.\n\n"
+        f"4. RESTRIÇÕES RÍGIDAS:\n"
+        f"- PROIBIDO incluir molduras, caixas de contorno ou bordas externas na imagem.\n"
+        f"- PROIBIDO adicionar números de slide, paginação ou rótulos (como 'capa', 'slide 1', 'cta').\n"
+        f"- PROIBIDO incluir URLs, domínios, sites, arrobas de redes sociais, telefones ou e-mails na arte."
     )
 
     conteudos = [prompt_iterativo]
