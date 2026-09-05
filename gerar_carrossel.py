@@ -151,16 +151,17 @@ def gerar_slide_iterativo(client, slide, imagens_anteriores, lista_identidade):
 
     prompt_iterativo = (
         f"Crie o próximo slide sequencial de um carrossel contínuo vertical (proporção 4:5) para o Instagram, com acabamento premium e corporativo.\n\n"
-       f"1. TEXTO, TIPOGRAFIA E SÍNTESE (RIGOR CONTRA DUPLICAÇÃO E ERROS):\n"
-        f'- Conceito da Headline: "{headline}"\n'
-        f'- Conceito do Subtexto: "{subtexto}"\n'
-        f"- SÍNTESE VISUAL INTELIGENTE: Sintetize a mensagem em poucas palavras-chave de alto impacto (máximo de 3 a 5 palavras na Headline).\n"
-        f"- TOLERÂNCIA ZERO PARA PALAVRAS REPETIDAS: Cada palavra deve aparecer EXATAMENTE UMA ÚNICA VEZ. É estritamente proibido gaguejar ou duplicar palavras consecutivas (ex.: proibido escrever 'caro caro', 'tempo tempo', 'sua sua').\n"
-        f"- NÃO REPITA TERMOS PARA PREENCHER ESPAÇO: Em vez de duplicar termos para preencher a largura da tela, aumente o tamanho da fonte (tracking/kerning e peso Heavy Bold) para ocupar o espaço de forma limpa.\n"
-        f"- Se o subtexto for longo ou desnecessário visualmente, resuma-o em uma linha muito curta ou use apenas a Headline.\n"
-        f"- HIERARQUIA VISUAL: Headline em letras maiúsculas, Heavy Bold Sans-Serif, dominante e com ortografia impecável.\n"
-        f"- O subtexto deve ser curto, discreto e subordinado à headline.\n\n"
-        f"- Nunca repita palavras (duplicadas em sequencia) ou frases (que já foram usadas no carrossel).\n\n"
+        f"1. TEXTO E INTEGRIDADE TIPOGRÁFICA (SEM PALAVRAS COMIDAS OU TRUNCADAS):\n"
+        f'- Frase de referência para Headline: "{headline}"\n'
+        f'- Frase de referência para Subtexto: "{subtexto}"\n'
+        f"- INTEGRIDADE GRAMATICAL COMPLETA: Mantenha a frase curta, mas NUNCA suprima palavras essenciais como pronomes, artigos ou preposições (por exemplo, JAMAIS transforme 'SUA EQUIPE' em 'EQUIPE'). A frase renderizada deve fazer sentido completo e manter todos os seus termos.\n"
+        f"- PROIBIDO COMER LETRAS OU PALAVRAS: Cada palavra da frase selecionada deve ser escrita do início ao fim com todas as suas letras, sem cortes, sem palavras engolidas e sem caracteres truncados.\n"
+        f"- TOLERÂNCIA ZERO PARA DUPLICAÇÃO: Cada palavra deve aparecer exatamente UMA única vez, sem repetições consecutivas (proibido 'caro caro', 'sua sua').\n"
+        f"- AJUSTE POR ESCALA DE FONTE: Caso a frase completa seja longa, reduza proporcionalmente o tamanho da fonte para que ela caiba com folga nas margens, mas NUNCA delete palavras da frase para caber na tela.\n"
+        f"- HIERARQUIA VISUAL: Headline em letras maiúsculas, fonte Heavy Bold Sans-Serif, nítida e dominante.\n"
+        f"- Subtexto curto e subordinado, posicionado logo abaixo da headline.\n"
+        f"- Proibido repetir frases inteiras que já foram utilizadas nos slides anteriores anexados.\n\n"
+        f"- VOCÊ NÃO PODE COMETER ERROS DE ESCRITA DE FORMA ALGUMA.\n\n"
         f"2. ALINHAMENTO GEOMÉTRICO E CONTINUIDADE ENTRE SLIDES (REGRA RÍGIDA):\n"
         f"- LINHA DE BASE DO TÍTULO: A primeira linha do texto principal DEVE começar EXATAMENTE na mesma coordenada vertical Y (~20% do topo) dos slides anteriores anexados.\n"
         f"- ALINHAMENTO E MARGEM: Mantenha o mesmo recuo lateral (margem esquerda segura de 10%) para os textos em todos os slides.\n"
