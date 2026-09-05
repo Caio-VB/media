@@ -263,7 +263,7 @@ def enviar_pendencias_git(mensagem_commit="Sincronização de arquivos pendentes
 def executar():
     # Validação de dias permitidos: Terça (1), Quinta (3) e Domingo (6)
     dia_atual = datetime.datetime.now().weekday()
-    dias_permitidos = [1, 3, 6]
+    dias_permitidos = [1, 3, 5]
 
     if dia_atual not in dias_permitidos:
         print("[i] Hoje não é dia de geração de carrossel (Apenas Terça, Quinta e Domingo). Encerrando rotina.")

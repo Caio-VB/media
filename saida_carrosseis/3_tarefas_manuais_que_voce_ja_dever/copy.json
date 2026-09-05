@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "capa",
+      "headline": "3 tarefas manuais para automatizar hoje",
+      "subtexto": "Ganhe tempo e reduza erros na sua empresa",
+      "elementos": "Foto real de um empresário sorrindo enquanto usa um notebook em um escritório iluminado"
+    },
+    {
+      "numero": 2,
+      "tipo": "conteudo",
+      "headline": "1. Envio de notas fiscais",
+      "subtexto": "Emita e envie comprovantes automaticamente aos clientes",
+      "elementos": "Foto real de um computador de mesa exibindo um painel financeiro digital organizado"
+    },
+    {
+      "numero": 3,
+      "tipo": "conteudo",
+      "headline": "2. Mensagens de pós-venda",
+      "subtexto": "Acompanhe seus clientes sem precisar digitar cada mensagem",
+      "elementos": "Foto real de um smartphone em mãos humanas recebendo notificações de mensagens"
+    },
+    {
+      "numero": 4,
+      "tipo": "conteudo",
+      "headline": "3. Agendamento de reuniões",
+      "subtexto": "Deixe o cliente escolher o melhor horário sozinho",
+      "elementos": "Foto real de um tablet sobre uma mesa corporativa mostrando um calendário digital"
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "headline": "Quer automatizar sua empresa?",
+      "subtexto": "Salve este post e comece a mudar sua rotina hoje",
+      "elementos": "Foto real de uma equipe de trabalho comemorando resultados em uma sala de reuniões"
+    }
+  ]
+}
