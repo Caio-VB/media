@@ -123,15 +123,22 @@
                 return status !== "pendente" && status !== "postado";
             });
 
-            // Ordena colocando "aguardando" (ou "concluido") sempre no topo
+            // Ordena: Aguardando no topo (1), Aprovados no meio (2), Reprovados no fim (3)
+            const ordemStatus = {
+                "aguardando": 1,
+                "concluido": 1,
+                "aprovado": 2,
+                "reprovado": 3
+            };
+
             itensFiltrados.sort((a, b) => {
                 let statusA = (a.status || "").toLowerCase();
                 let statusB = (b.status || "").toLowerCase();
-                
-                let isAguardandoA = (statusA === "aguardando" || statusA === "concluido") ? 0 : 1;
-                let isAguardandoB = (statusB === "aguardando" || statusB === "concluido") ? 0 : 1;
-                
-                return isAguardandoA - isAguardandoB;
+
+                let pesoA = ordemStatus[statusA] ?? 99;
+                let pesoB = ordemStatus[statusB] ?? 99;
+
+                return pesoA - pesoB;
             });
 
             if (itensFiltrados.length === 0) {
